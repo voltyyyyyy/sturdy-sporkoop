@@ -10,7 +10,6 @@ import restaurant.domain.Menu;
 import restaurant.domain.Restaurant;
 import restaurant.ui.ConsoleUI;
 
-/** Entry point: wires the base setting, the UI and the turn engine. */
 public final class Main {
 
     private static final int DEFAULT_SEED = 42;
