@@ -1,0 +1,17 @@
+PASS: rejected order twice -> Customer 1 has already ordered.
+PASS: rejected serve before READY -> Order #1 is not READY yet.
+PASS: rejected serve at 1/2 -> Order #1 is not READY yet.
+PASS: READY after last unit
+PASS: rejected serve READY this turn -> Order #1 became READY this turn and can be served next turn.
+PASS: SERVED
+PASS: no eating transition on the serving turn
+PASS: READY_TO_PAY after one full turn
+PASS: cannot pay on the ready turn
+PASS: pays on the next turn
+PASS: paid count
+PASS: table freed after payment
+PASS: satisfaction reaches 0
+PASS: unfinished order cancelled
+PASS: table freed on abandonment
+PASS: one unhappy departure
+ALL 16 CHECKS PASSED
