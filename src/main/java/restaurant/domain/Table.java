@@ -1,39 +1,25 @@
 package restaurant.domain;
 
-import java.util.Objects;
+
+
 
 public final class Table {
-
     private final int tableId;
     private Customer occupant;
 
-    public Table(int tableId) {
-        if (tableId <= 0) {
-            throw new IllegalArgumentException("Table id must be positive.");
-        }
+    Table(int tableId) {
         this.tableId = tableId;
     }
 
-    public boolean isFree() {
-        return occupant == null;
-    }
+    public int getTableId() { return tableId; }
+    public Customer getOccupant() { return occupant; }
+    public boolean isFree() { return occupant == null; }
 
     public void seat(Customer customer) {
-        if (!isFree()) {
-            throw new IllegalActionException("Table " + tableId + " is already occupied.");
-        }
-        occupant = Objects.requireNonNull(customer, "customer");
+        throw new UnsupportedOperationException("TODO: Qiyun - exclusive table occupancy");
     }
 
-    public void vacate() {
-        occupant = null;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    public Customer getOccupant() {
-        return occupant;
+    public void clear() {
+        throw new UnsupportedOperationException("TODO: Qiyun - guarded table clearing");
     }
 }
