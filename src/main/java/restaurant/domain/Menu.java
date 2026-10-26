@@ -1,48 +1,27 @@
 package restaurant.domain;
 
 import java.util.List;
-import java.util.Objects;
 
-/** The menu for one game. */
+/**
+ * Stage 1 prototype. Owner: Karthik.
+ * See docs/stage-1-contracts.md before implementing TODO methods.
+ */
 public final class Menu {
+    // Composition: Menu creates and owns its three dishes.
+    // The assignment brief supplies the Burger values omitted from the pasted report.
+    private final List<MenuItem> items = List.of(
+            new MenuItem("Salad", 900L, 1),
+            new MenuItem("Burger", 1500L, 1),
+            new MenuItem("Pasta", 1800L, 2));
 
-    private final List<MenuItem> items;
-
-    public Menu(List<MenuItem> items) {
-        Objects.requireNonNull(items, "items");
-        if (items.isEmpty()) {
-            throw new IllegalArgumentException("A menu needs at least one item.");
-        }
-        this.items = List.copyOf(items);
+    public Menu() {
+        // Only Stage 1 dishes; no combos or pricing policies.
     }
 
-    /** The three items required by the Stage 1 base setting. */
-    public static Menu baseMenu() {
-        return new Menu(List.of(
-                new MenuItem("Salad", 900, 1),
-                new MenuItem("Burger", 1500, 1),
-                new MenuItem("Pasta", 1800, 2)));
-    }
+    public List<MenuItem> getItems() { return items; }
 
-    public int size() {
-        return items.size();
-    }
-
-    public MenuItem itemAt(int index) {
-        return items.get(index);
-    }
-
-    public List<MenuItem> items() {
-        return items;
-    }
-
+    /** Lookup a dish by name; reject an unknown name rather than inventing a dish. */
     public MenuItem findByName(String name) {
-        Objects.requireNonNull(name, "name");
-        for (MenuItem item : items) {
-            if (item.getName().equalsIgnoreCase(name)) {
-                return item;
-            }
-        }
-        throw new IllegalArgumentException("No menu item named " + name + ".");
+        throw new UnsupportedOperationException("TODO: Karthik - menu lookup");
     }
 }

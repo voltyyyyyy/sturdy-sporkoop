@@ -1,41 +1,31 @@
 package restaurant.domain;
 
-import java.util.Objects;
-
-/** A table that can hold at most one customer. */
+/**
+ * Stage 1 prototype. Owner: Qiyun.
+ * See docs/stage-1-contracts.md before implementing TODO methods.
+ */
 public final class Table {
-
     private final int tableId;
+    // Single association endpoint implementing Table -> Customer.
+    // Do not add a second customer-id/occupant field for the same relationship.
     private Customer occupant;
 
-    public Table(int tableId) {
-        if (tableId <= 0) {
-            throw new IllegalArgumentException("Table id must be positive.");
-        }
+    // Package-private construction: Restaurant creates its own two tables.
+    Table(int tableId) {
         this.tableId = tableId;
     }
 
-    public boolean isFree() {
-        return occupant == null;
-    }
+    public int getTableId() { return tableId; }
+    public Customer getOccupant() { return occupant; }
+    public boolean isFree() { return occupant == null; }
 
+    /** Store one occupant only; reject an occupied table. Waiter handles markSeated(). */
     public void seat(Customer customer) {
-        if (!isFree()) {
-            throw new IllegalActionException("Table " + tableId + " is already occupied.");
-        }
-        occupant = Objects.requireNonNull(customer, "customer");
+        throw new UnsupportedOperationException("TODO: Qiyun - exclusive table occupancy");
     }
 
-    public void vacate() {
-        occupant = null;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    /** Returns the occupant, or null when the table is free. */
-    public Customer getOccupant() {
-        return occupant;
+    /** Clear only after this occupant has become PAID or LEFT. */
+    public void clear() {
+        throw new UnsupportedOperationException("TODO: Qiyun - guarded table clearing");
     }
 }

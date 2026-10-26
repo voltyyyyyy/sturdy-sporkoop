@@ -1,116 +1,74 @@
-# sturdy-sporkoop
+# Restaurant Rush - Stage 1 implementation scaffold
 
-SC2002 / SC2302 Object Oriented Design & Programming - **Group Assignment: Restaurant Rush**.
+SC2002 / SC2302 Object-Oriented Design and Programming
 
-A turn-based restaurant management game in Java with a command-line interface.
-The player is the manager and decides which customers and orders get staff attention first.
+Team: Mingchen, Karthik, Yuma, Qiyun, Pluem
 
-## Assignment files
+This repository replaces the previous implementation with prototypes for the **17 types in the supplied Stage 1 design**. Constructors, fields, basic getters and enum values provide a shared starting point. Business rules and console interaction are deliberately left as TODOs that throw `UnsupportedOperationException`; this is not a playable game or evidence of completed requirements.
 
-| File | What it is |
+## Independent work allocation
+
+| Owner | Files |
 | --- | --- |
-| [`assignment/SC2002_Restaurant_Rush_Group_Assignment.docx`](assignment/SC2002_Restaurant_Rush_Group_Assignment.docx) | The official brief, downloaded from NTULearn. |
-| [`assignment/assignment-brief.md`](assignment/assignment-brief.md) | The same brief as Markdown, for quick reading and diffing. |
+| Mingchen | `Customer`, `RegularCustomer`, `CustomerState` |
+| Karthik | `MenuItem`, `Menu`, `Order`, `OrderStatus` |
+| Qiyun | `Restaurant`, `Table`, `WaitingQueue`, `GameResult` |
+| Yuma | `Staff`, `Waiter`, `Chef`, `Cashier` |
+| Pluem | `GameMgr`, `ConsoleUI` |
 
-Source: NTULearn course `26S1-SC2002-SC2302-OBJECT ORIENTED DES & PROG`, content folder **Group Assignment**, released 6 Oct 2026.
+All shared method signatures already exist and compile together. Implement your own files against these signatures. Agree any signature changes with affected owners first. Use small local test fixtures or test doubles while another owner's TODO remains unfinished; do not implement their rules in your module.
 
-## Design documentation
+## Structure
 
-| Document | What it is |
-| --- | --- |
-| [Stage 1 class diagram](docs/uml/stage-1-classes.png) ([SVG](docs/uml/stage-1-classes.svg), [PlantUML source](docs/uml/stage-1-classes.puml)) | Entities, control and boundary classes for the `stage-1` build, with responsibilities and multiplicities. |
-| [Stage 1 design notes](docs/uml/stage-1-classes.md) | How to read the notation, the rules encoded in the model, and the Stage 2 and 3 changes the final report diagram must show. |
+- `src/main/java/restaurant/ui/ConsoleUI.java`: the only boundary class and the only place for console input/output and money formatting.
+- `src/main/java/restaurant/control/GameMgr.java`: the only control class; owns turn sequencing and the entry point.
+- `src/main/java/restaurant/domain/`: the other 15 types, including all staff, abstract classes and both enums.
+- [Shared contracts and implementation checklist](docs/stage-1-contracts.md): rules, ownership, dependencies and handoff checks.
 
-The diagram is updated at each stage; the PDF report must use the Stage 3 version.
+There is no extra `Main`, `TurnEngine`, configuration class, action/request type, pricing strategy, interface or custom exception. Stage 2/3 customer types, Host, combos and Happy Hour are not part of this scaffold.
 
-## What we build
+## Build
 
-Three runnable stages, each tagged in this repository. Each stage builds on the one before it.
-
-| Stage | Adds | Git tag |
-| --- | --- | --- |
-| 1 - Basic operation | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, both endings | `stage-1` |
-| 2 - Customer behaviour | VIP and Critic customers | `stage-2` |
-| 3 - New role and menu policy | Host, ComboMeal, Happy Hour | `stage-3` |
-
-Stage 1 is implemented in this commit. Stage 2 and Stage 3 have not started.
-
-## Build and run
-
-Requires Java 17 or newer. There are no external dependencies, so the game builds and runs offline.
+Requires JDK 17 or newer. No external dependencies.
 
 Windows PowerShell:
 
 ```powershell
 .\build.ps1
+```
+
+Portable compilation from the repository root:
+
+```sh
+mkdir -p out
+find src/main/java -name '*.java' > out/sources.txt
+javac -encoding UTF-8 --release 17 -Xlint:all -Werror -d out @out/sources.txt
+```
+
+The skeleton is expected to compile. Running the entry point currently reaches unimplemented TODO methods; gameplay starts working only after the team implements them.
+
+After implementation:
+
+```powershell
 .\run.ps1
 ```
 
-`run.ps1` compiles first, then starts the game. Choose a different dish sequence with:
+Or:
 
-```powershell
-.\run.ps1 --seed 526
+```sh
+java -cp out restaurant.control.GameMgr
 ```
 
-Manual build, if you prefer not to use the script:
+## Required Stage 1 behaviour
 
-```powershell
-New-Item -ItemType Directory -Force out | Out-Null
-javac -encoding UTF-8 --release 17 -d out (Get-ChildItem -Recurse src\main\java -Filter *.java).FullName
-java -cp out restaurant.app.Main
-```
+- 18 turns, exactly two tables, one Waiter, one Chef and one Cashier.
+- Arrivals on turns 1, 4, 7, 10, 13 and 16; initial satisfaction 100.
+- Waiter: at most one seating, ordering or serving task each turn. Chef: at most one preparation unit. Cashier: at most one eligible payment, automatically.
+- Regular waiting penalty: 8, clamped at zero. No loss after serving.
+- Salad: 900 cents / 1 unit; Burger: 1500 cents / 1 unit; Pasta: 1800 cents / 2 units.
+- Victory after turn 18 requires at least four **paid** customers, at least 4500 cents revenue, and average satisfaction of paid customers at least 60.
+- All amounts use `long` cents; all domain state changes use guarded methods.
 
-macOS or Linux:
+The pasted report names Salad and Pasta; Burger's values and the precise eating/payment timing come from the former repository's assignment brief. They fill omissions without changing the pasted report's class design.
 
-```bash
-mkdir -p out
-find src/main/java -name '*.java' > out/sources.txt
-javac -encoding UTF-8 --release 17 -d out @out/sources.txt
-java -cp out restaurant.app.Main
-```
-
-The game prints a numbered menu every turn. Type the option number and press Enter. A seat action asks for the customer and then the table id; serve and prepare actions ask you to choose from the displayed list. The seed is printed at start-up, so the customer dish choices can be reproduced.
-
-## Reproducible runs
-
-| Run | Seed | Input | Final result | Transcript |
-| --- | --- | --- | --- | --- |
-| Victory | 526 | [`runs/victory.txt`](runs/victory.txt) | 4 paid, $72.00, average 66.0 | [`stage-1-victory.txt`](docs/test-runs/stage-1-victory.txt) |
-| Defeat | 42 | [`runs/defeat.txt`](runs/defeat.txt) | 0 paid, $0.00, N/A | [`stage-1-defeat.txt`](docs/test-runs/stage-1-defeat.txt) |
-
-After building:
-
-```powershell
-Get-Content runs\victory.txt | java -cp out restaurant.app.Main --seed 526
-Get-Content runs\defeat.txt  | java -cp out restaurant.app.Main --seed 42
-```
-
-In `cmd.exe`, use input redirection:
-
-```cmd
-java -cp out restaurant.app.Main --seed 526 < runs\victory.txt
-java -cp out restaurant.app.Main --seed 42 < runs\defeat.txt
-```
-
-Use `java` directly for scripted runs; `run.ps1` is for interactive play. The full test notes, including the rule checks, are in [`docs/test-runs/stage-1.md`](docs/test-runs/stage-1.md).
-
-## Base setting (must always be reproducible)
-
-- 18 turns maximum
-- 2 tables
-- Waiter x 1 (one task per turn), Chef x 1 (one preparation unit per turn), Cashier x 1 (one payment per turn)
-- One customer arrives at the start of turns 1, 4, 7, 10, 13 and 16 (six in total)
-
-Victory at the end of turn 18 needs all three: at least 4 paid customers, revenue of at least $45, and average satisfaction of paid customers at least 60.
-
-Menu: Salad $9.00 / 1 unit, Burger $15.00 / 1 unit, Pasta $18.00 / 2 units.
-
-## Submission checklist
-
-- [ ] Source code with build and run instructions
-- [ ] README with the repository URL, stage comparisons (Section 5) and video timestamps
-- [ ] PDF report with diagrams, design discussion, functional evidence and reflections
-- [ ] About 15 minutes of recorded video with readable screen capture
-- [ ] Signed Declaration of Original Work and each member's Declaration on Use of GAI Assistance
-
-Archive name: `LABGroup_AssignmentGrp.zip`, for example `FCS1_Grp1.zip`.
+The old source, assignment copies, diagrams, completed-game claims and run transcripts were removed as requested. They remain recoverable in Git history. Existing stage tags have not been moved and are not claims that this scaffold is playable.

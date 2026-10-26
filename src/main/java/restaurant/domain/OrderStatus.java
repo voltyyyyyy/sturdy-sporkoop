@@ -1,6 +1,9 @@
 package restaurant.domain;
 
-/** The lifecycle states of an order. */
+/**
+ * Stage 1 prototype. Owner: Karthik.
+ * See docs/stage-1-contracts.md before implementing TODO methods.
+ */
 public enum OrderStatus {
     PLACED,
     READY,

@@ -1,21 +1,13 @@
 $ErrorActionPreference = "Stop"
-
-$root = $PSScriptRoot
-$sourceRoot = Join-Path $root "src\main\java"
-$output = Join-Path $root "out"
-
-$sources = @(Get-ChildItem -Path $sourceRoot -Recurse -Filter *.java |
+$projectRoot = $PSScriptRoot
+$sourceRoot = Join-Path $projectRoot "src\main\java"
+$outputRoot = Join-Path $projectRoot "out"
+$sources = @(Get-ChildItem -LiteralPath $sourceRoot -Recurse -Filter *.java |
     Select-Object -ExpandProperty FullName)
-
-if ($sources.Count -eq 0) {
-    throw "No Java sources found under $sourceRoot."
+if ($sources.Count -ne 17) {
+    throw "Expected exactly the 17 Stage 1 types from the design; found $($sources.Count)."
 }
-
-New-Item -ItemType Directory -Force -Path $output | Out-Null
-javac -encoding UTF-8 --release 17 -d $output $sources
-
-if ($LASTEXITCODE -ne 0) {
-    throw "Compilation failed with exit code $LASTEXITCODE."
-}
-
-Write-Host "Compiled $($sources.Count) source files into $output."
+New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
+javac -encoding UTF-8 --release 17 -Xlint:all -Werror -d $outputRoot $sources
+if ($LASTEXITCODE -ne 0) { throw "Compilation failed." }
+Write-Host "Compiled all 17 Stage 1 prototypes. Game-rule TODOs remain unimplemented."

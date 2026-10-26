@@ -1,279 +1,99 @@
 package restaurant.domain;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
+import java.util.OptionalDouble;
 
 /**
- * Owns the state of one game and enforces the rules for seating, ordering,
- * preparation, serving, eating, payment and satisfaction.
+ * Stage 1 prototype. Owner: Qiyun.
+ * See docs/stage-1-contracts.md before implementing TODO methods.
  */
 public final class Restaurant {
+    private static final int REQUIRED_PAID_CUSTOMERS = 4;
+    private static final long REQUIRED_REVENUE_CENTS = 4500L;
+    private static final int REQUIRED_AVERAGE_SATISFACTION = 60;
 
-    private final GameConfig config;
-    private final Menu menu;
     private final List<Table> tables;
     private final WaitingQueue waitingQueue;
-    private final List<Customer> customers;
-    private final GameStats stats;
-    private final Random random;
+    private final Menu menu;
+    private long revenueCents;
+    // Completed, paid customers: the report's served-count scoring metric.
+    private int servedCount;
+    private int abandonedCount;
+    private final List<Customer> paidCustomers = new ArrayList<>();
+    private final List<Integer> paidSatisfaction = new ArrayList<>();
 
-    private int nextCustomerId;
-    private int nextOrderId;
-
-    public Restaurant(GameConfig config, Menu menu, Random random) {
-        this.config = Objects.requireNonNull(config, "config");
-        this.menu = Objects.requireNonNull(menu, "menu");
-        this.random = Objects.requireNonNull(random, "random");
-
-        this.tables = new ArrayList<>();
-        for (int tableId = 1; tableId <= config.getTableCount(); tableId++) {
-            tables.add(new Table(tableId));
-        }
+    public Restaurant() {
+        // C1: create exactly two tables here; never accept externally supplied tables.
+        this.tables = List.of(new Table(1), new Table(2));
         this.waitingQueue = new WaitingQueue();
-        this.customers = new ArrayList<>();
-        this.stats = new GameStats();
-        this.nextCustomerId = 1;
-        this.nextOrderId = 1;
+        this.menu = new Menu();
     }
 
-    /** Creates the customers scheduled for this turn and adds them to the queue. */
-    public List<Customer> arrive(int turn) {
-        if (!config.isArrivalTurn(turn)) {
-            return List.of();
-        }
-        int customerId = nextCustomerId++;
-        Customer customer = new Customer(customerId, "Customer " + customerId, turn);
-        customer.decideOrder(menu, random);
-        customers.add(customer);
-        waitingQueue.enqueue(customer);
-        return List.of(customer);
+    public List<Table> getTables() { return tables; }
+    public WaitingQueue getWaitingQueue() { return waitingQueue; }
+    public Menu getMenu() { return menu; }
+    public long getRevenueCents() { return revenueCents; }
+    public int getServedCount() { return servedCount; }
+    public int getAbandonedCount() { return abandonedCount; }
+
+    /** Snapshot used for iteration; never expose mutable restaurant collections. */
+    public List<Customer> getPresentCustomers() {
+        throw new UnsupportedOperationException("TODO: Qiyun - queued and seated customer snapshot");
     }
 
-    /** Seats a queued customer at a free table. */
-    public void seat(Customer customer, Table table) {
-        requirePresent(customer);
-        if (!waitingQueue.contains(customer)) {
-            throw new IllegalActionException(customer.getName() + " is not waiting for a table.");
-        }
-        if (!tables.contains(table)) {
-            throw new IllegalActionException("That table does not belong to this restaurant.");
-        }
-        if (!table.isFree()) {
-            throw new IllegalActionException("Table " + table.getTableId() + " is already occupied.");
-        }
-        table.seat(customer);
-        waitingQueue.remove(customer);
+    /** Find a seated customer by id for a manager choice; reject an unknown id. */
+    public Customer findSeatedCustomer(int customerId) {
+        throw new UnsupportedOperationException("TODO: Qiyun - seated customer lookup");
     }
 
-    /** Takes the customer's order and locks the price on it. */
-    public Order takeOrder(Customer customer, int turn) {
-        requirePresent(customer);
-        if (!isSeated(customer)) {
-            throw new IllegalActionException(customer.getName() + " is not seated.");
-        }
-        if (customer.hasOrder()) {
-            throw new IllegalActionException(customer.getName() + " has already ordered.");
-        }
-        MenuItem item = customer.getChosenItem();
-        if (item == null) {
-            throw new IllegalStateException(customer.getName() + " has not chosen a dish.");
-        }
-        Order order = new Order(
-                nextOrderId++,
-                customer,
-                item,
-                customer.billCents(item),
-                turn);
-        customer.placeOrder(order);
-        return order;
+    /** Return an owned table; reject a table id outside the two-table restaurant. */
+    public Table findTable(int tableId) {
+        throw new UnsupportedOperationException("TODO: Qiyun - owned table lookup");
     }
 
-    /** Advances one order by one preparation unit. */
-    public void advanceKitchen(Order order, int turn) {
-        requireActiveOrder(order);
-        order.advancePrepUnit(turn);
+    /** Domain orchestration: call Customer.advanceEating(turn) for table occupants. */
+    public void advanceEating(int turn) {
+        throw new UnsupportedOperationException("TODO: Qiyun - delegate eating progression to customers");
     }
 
-    /** Serves an order that was already READY when the Waiter acted. */
-    public void serve(Order order, int turn) {
-        requireActiveOrder(order);
-        if (!order.isReady()) {
-            throw new IllegalActionException(
-                    "Order #" + order.getOrderId() + " is not READY yet.");
-        }
-        if (order.getTurnReady() >= turn) {
-            throw new IllegalActionException(
-                    "Order #" + order.getOrderId() + " became READY this turn and can be served next turn.");
-        }
-        order.markServed(turn);
-        stats.recordServed();
+    /** Oldest eligible customer; READY_TO_PAY must have been reached before this turn. */
+    public Optional<Customer> nextReadyToPay(int turn) {
+        throw new UnsupportedOperationException("TODO: Qiyun - oldest eligible payment selection");
     }
 
-    /** Completes one full turn of eating for customers served before this turn. */
-    public List<Customer> advanceEating(int turn) {
-        List<Customer> readyToPay = new ArrayList<>();
-        for (Customer customer : customers) {
-            Order order = customer.getOrder();
-            if (order != null
-                    && order.getStatus() == OrderStatus.SERVED
-                    && order.getTurnServed() < turn
-                    && !customer.isReadyToPay()) {
-                customer.markReadyToPay(turn);
-                readyToPay.add(customer);
-            }
-        }
-        return readyToPay;
+    /**
+     * Validate membership and payment eligibility; reject repeat payment.
+     * Mark Order PAID before Customer PAID, record the locked bill and satisfaction,
+     * increment completed servedCount exactly once, and clear the owned table.
+     * Cashier delegates here; no staff object owns score arithmetic.
+     */
+    public void recordPayment(Customer customer, int turn) {
+        throw new UnsupportedOperationException("TODO: Qiyun - payment transaction and scoring");
     }
 
-    /** Pays the oldest customer who was already ready to pay before this turn. */
-    public Optional<Customer> payOldestReady(int turn) {
-        Optional<Customer> payer = customers.stream()
-                .filter(Customer::isReadyToPay)
-                .filter(customer -> customer.getReadyToPayTurn() < turn)
-                .min(Comparator.comparingInt(Customer::getReadyToPayTurn)
-                        .thenComparingInt(Customer::getArrivalTurn)
-                        .thenComparingInt(Customer::getCustomerId));
-
-        payer.ifPresent(this::completePayment);
-        return payer;
+    /**
+     * For each waiting/unserved seated customer, call
+     * customer.loseSatisfaction(customer.waitingPenalty()).
+     * At zero: cancel any unserved order, call leave(), remove from queue or clear
+     * table, and increment abandonedCount once. Return the departing customers.
+     * Never test for RegularCustomer (P1).
+     */
+    public List<Customer> applyWaitingPenalties() {
+        throw new UnsupportedOperationException("TODO: Qiyun - penalties and abandonment orchestration");
     }
 
-    /** Applies one turn of satisfaction loss to every present, unserved customer. */
-    public List<Customer> applySatisfactionLoss() {
-        List<Customer> leavers = new ArrayList<>();
-        for (Customer customer : List.copyOf(customers)) {
-            if (customer.isServed()) {
-                continue;
-            }
-            customer.loseSatisfaction(customer.satisfactionLossPerTurn());
-            if (customer.getSatisfaction() == 0) {
-                abandon(customer);
-                leavers.add(customer);
-            }
-        }
-        return leavers;
+    /** Average the satisfaction snapshots recorded at payment; empty if none paid. */
+    public OptionalDouble getAverageSatisfaction() {
+        throw new UnsupportedOperationException("TODO: Qiyun - paid-customer satisfaction average");
     }
 
-    /** True when all three victory targets are met. */
-    public boolean isVictory() {
-        return stats.getPaidCount() >= config.getTargetPaidCustomers()
-                && stats.getRevenueCents() >= config.getTargetRevenueCents()
-                && stats.hasPaidCustomers()
-                && stats.averageSatisfaction() >= config.getTargetAverageSatisfaction();
-    }
-
-    public List<Customer> waitingCustomers() {
-        return waitingQueue.snapshot();
-    }
-
-    public List<Customer> seatedCustomers() {
-        List<Customer> seated = new ArrayList<>();
-        for (Table table : tables) {
-            if (!table.isFree()) {
-                seated.add(table.getOccupant());
-            }
-        }
-        return List.copyOf(seated);
-    }
-
-    public List<Customer> customersAwaitingOrder() {
-        return seatedCustomers().stream()
-                .filter(customer -> !customer.hasOrder())
-                .toList();
-    }
-
-    public List<Order> servableOrders() {
-        return customers.stream()
-                .map(Customer::getOrder)
-                .filter(Objects::nonNull)
-                .filter(Order::isReady)
-                .toList();
-    }
-
-    public List<Order> preparableOrders() {
-        return customers.stream()
-                .map(Customer::getOrder)
-                .filter(Objects::nonNull)
-                .filter(order -> order.getStatus() == OrderStatus.PLACED)
-                .toList();
-    }
-
-    public List<Table> freeTables() {
-        return tables.stream()
-                .filter(Table::isFree)
-                .toList();
-    }
-
-    public GameConfig getConfig() {
-        return config;
-    }
-
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public List<Table> getTables() {
-        return List.copyOf(tables);
-    }
-
-    public GameStats getStats() {
-        return stats;
-    }
-
-    private void completePayment(Customer customer) {
-        Order order = customer.getOrder();
-        if (order == null) {
-            throw new IllegalStateException("A paying customer must have an order.");
-        }
-        Table table = tableOf(customer)
-                .orElseThrow(() -> new IllegalStateException(
-                        customer.getName() + " is ready to pay but is not seated."));
-
-        order.markPaid();
-        stats.recordPayment(customer);
-        customers.remove(customer);
-        table.vacate();
-    }
-
-    private void abandon(Customer customer) {
-        Order order = customer.getOrder();
-        if (order != null && order.isActive()) {
-            order.cancel();
-        }
-        waitingQueue.remove(customer);
-        tableOf(customer).ifPresent(Table::vacate);
-        customers.remove(customer);
-        stats.recordDeparture();
-    }
-
-    private Optional<Table> tableOf(Customer customer) {
-        return tables.stream()
-                .filter(table -> customer == table.getOccupant())
-                .findFirst();
-    }
-
-    private boolean isSeated(Customer customer) {
-        return tableOf(customer).isPresent();
-    }
-
-    private void requirePresent(Customer customer) {
-        Objects.requireNonNull(customer, "customer");
-        if (!customers.contains(customer)) {
-            throw new IllegalActionException("That customer is no longer in the restaurant.");
-        }
-    }
-
-    private void requireActiveOrder(Order order) {
-        Objects.requireNonNull(order, "order");
-        boolean belongsToPresentCustomer = customers.stream()
-                .anyMatch(customer -> customer.getOrder() == order);
-        if (!belongsToPresentCustomer) {
-            throw new IllegalActionException(
-                    "Order #" + order.getOrderId() + " is no longer active.");
-        }
+    /**
+     * Called after turn 18. Victory requires all three thresholds above.
+     * No paid customers means no average and therefore no victory.
+     */
+    public GameResult createResult(int turnsUsed) {
+        throw new UnsupportedOperationException("TODO: Qiyun - final victory calculation and result value");
     }
 }
