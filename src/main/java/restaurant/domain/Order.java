@@ -10,6 +10,9 @@ public final class Order {
     private OrderStatus status;
 
     public Order(MenuItem item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Order item must not be null");
+        }
         this.item = item;
         this.priceCents = item.getPriceCents();
         this.preparationUnitsDone = 0;
@@ -22,18 +25,33 @@ public final class Order {
     public OrderStatus getStatus() { return status; }
 
     public void advanceOneUnit() {
-        throw new UnsupportedOperationException("TODO: Karthik - guarded preparation progress");
+        if (status != OrderStatus.PLACED) {
+            throw new IllegalStateException("Only placed orders can be prepared");
+        }
+        preparationUnitsDone++;
+        if (preparationUnitsDone >= item.getPreparationUnits()) {
+            status = OrderStatus.READY;
+        }
     }
 
     public void markServed() {
-        throw new UnsupportedOperationException("TODO: Karthik - READY to SERVED");
+        if (status != OrderStatus.READY) {
+            throw new IllegalStateException("Order is not ready to serve");
+        }
+        status = OrderStatus.SERVED;
     }
 
     public void markPaid() {
-        throw new UnsupportedOperationException("TODO: Karthik - SERVED to PAID");
+        if (status != OrderStatus.SERVED) {
+            throw new IllegalStateException("Only served orders can be paid");
+        }
+        status = OrderStatus.PAID;
     }
 
     public void cancel() {
-        throw new UnsupportedOperationException("TODO: Karthik - cancellation guards");
+        if (status == OrderStatus.SERVED || status == OrderStatus.PAID) {
+            throw new IllegalStateException("Cannot cancel a served or paid order");
+        }
+        status = OrderStatus.CANCELLED;
     }
 }

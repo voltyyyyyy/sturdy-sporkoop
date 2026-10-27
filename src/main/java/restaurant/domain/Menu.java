@@ -17,6 +17,12 @@ public final class Menu {
     public List<MenuItem> getItems() { return items; }
 
     public MenuItem findByName(String name) {
-        throw new UnsupportedOperationException("TODO: Karthik - menu lookup");
+        if (name == null) {
+            throw new IllegalArgumentException("Dish name must not be null");
+        }
+        return items.stream()
+                .filter(item -> item.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No dish named " + name));
     }
 }

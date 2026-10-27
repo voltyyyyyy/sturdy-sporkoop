@@ -9,6 +9,15 @@ public final class MenuItem {
     private final int preparationUnits;
 
     public MenuItem(String name, long priceCents, int preparationUnits) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Dish name must not be null or blank");
+        }
+        if (priceCents < 0) {
+            throw new IllegalArgumentException("Price must not be negative");
+        }
+        if (preparationUnits <= 0) {
+            throw new IllegalArgumentException("Preparation units must be positive");
+        }
         this.name = name;
         this.priceCents = priceCents;
         this.preparationUnits = preparationUnits;
