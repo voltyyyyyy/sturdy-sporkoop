@@ -21,11 +21,25 @@ public final class Table {
 
     /** Store one occupant only; reject an occupied table. Waiter handles markSeated(). */
     public void seat(Customer customer) {
-        throw new UnsupportedOperationException("TODO: Qiyun - exclusive table occupancy");
+        if (customer == null){
+            throw new IllegalArgumentException("Cannot seat a null customer");
+        }
+        if(!isFree()){
+            throw new IllegalStateException("Table" + tableId + " is already occupied");
+        }
+        occupant = customer;
     }
 
     /** Clear only after this occupant has become PAID or LEFT. */
     public void clear() {
-        throw new UnsupportedOperationException("TODO: Qiyun - guarded table clearing");
+        if (occupant == null){
+            return;
+        }
+        CustomerState state = occupant.getState();
+        if (state != CustomerState.PAID && state != CustomerState.LEFT){
+            throw new IllegalStateException("Table" + tableId + " cannot be cleared while the customer is " + state);
+        }
+
+        occupant = null;
     }
 }
