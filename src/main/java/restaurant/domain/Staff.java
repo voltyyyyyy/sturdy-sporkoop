@@ -2,12 +2,14 @@ package restaurant.domain;
 
 
 
-
 public abstract class Staff {
     private final String name;
     private boolean actedThisTurn;
 
     protected Staff(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Staff name must not be blank");
+        }
         this.name = name;
         this.actedThisTurn = false;
     }
@@ -16,14 +18,17 @@ public abstract class Staff {
     public boolean hasActedThisTurn() { return actedThisTurn; }
 
     public final void resetForTurn() {
-        throw new UnsupportedOperationException("TODO: Yuma - reset the one-task flag");
+        actedThisTurn = false;
     }
 
     protected final void requireAvailable() {
-        throw new UnsupportedOperationException("TODO: Yuma - reject a second task");
+        if (actedThisTurn) {
+            throw new IllegalStateException(name + " has already acted this turn");
+        }
     }
 
     protected final void markActed() {
-        throw new UnsupportedOperationException("TODO: Yuma - record a successful task");
+        requireAvailable();
+        actedThisTurn = true;
     }
 }
