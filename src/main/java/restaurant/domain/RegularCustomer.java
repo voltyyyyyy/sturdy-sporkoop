@@ -1,8 +1,5 @@
 package restaurant.domain;
 
-
-
-
 public final class RegularCustomer extends Customer {
     public RegularCustomer(int customerId, int arrivalTurn) {
         super(customerId, arrivalTurn);
@@ -10,6 +7,6 @@ public final class RegularCustomer extends Customer {
 
     @Override
     public int waitingPenalty() {
-        throw new UnsupportedOperationException("TODO: Mingchen - return the regular penalty of 8");
+        return 8;
     }
 }
