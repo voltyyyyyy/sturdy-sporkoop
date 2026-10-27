@@ -1,8 +1,8 @@
 package restaurant.domain;
 
 /**
- * Stage 1 prototype. Owner: Karthik.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Stage 1 implementation. Owner: Karthik.
+ * See docs/stage-1-contracts.md for the module contract.
  */
 public final class Order {
     private final MenuItem item;
@@ -12,7 +12,9 @@ public final class Order {
     private OrderStatus status;
 
     public Order(MenuItem item) {
-        // TODO Karthik: validate item before using it.
+        if (item == null) {
+            throw new IllegalArgumentException("Order item must not be null");
+        }
         this.item = item;
         this.priceCents = item.getPriceCents();
         this.preparationUnitsDone = 0;
@@ -26,21 +28,36 @@ public final class Order {
 
     /** Advance exactly one unit while PLACED; the final unit changes status to READY. */
     public void advanceOneUnit() {
-        throw new UnsupportedOperationException("TODO: Karthik - guarded preparation progress");
+        if (status != OrderStatus.PLACED) {
+            throw new IllegalStateException("Only placed orders can be prepared");
+        }
+        preparationUnitsDone++;
+        if (preparationUnitsDone >= item.getPreparationUnits()) {
+            status = OrderStatus.READY;
+        }
     }
 
     /** Require READY, then change status to SERVED. */
     public void markServed() {
-        throw new UnsupportedOperationException("TODO: Karthik - READY to SERVED");
+        if (status != OrderStatus.READY) {
+            throw new IllegalStateException("Order is not ready to serve");
+        }
+        status = OrderStatus.SERVED;
     }
 
     /** E1: refuse payment unless status is already SERVED. */
     public void markPaid() {
-        throw new UnsupportedOperationException("TODO: Karthik - SERVED to PAID");
+        if (status != OrderStatus.SERVED) {
+            throw new IllegalStateException("Only served orders can be paid");
+        }
+        status = OrderStatus.PAID;
     }
 
     /** Cancel an unserved order on abandonment; reject a served or paid order. */
     public void cancel() {
-        throw new UnsupportedOperationException("TODO: Karthik - cancellation guards");
+        if (status == OrderStatus.SERVED || status == OrderStatus.PAID) {
+            throw new IllegalStateException("Cannot cancel a served or paid order");
+        }
+        status = OrderStatus.CANCELLED;
     }
 }

@@ -3,8 +3,8 @@ package restaurant.domain;
 import java.util.List;
 
 /**
- * Stage 1 prototype. Owner: Karthik.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Stage 1 implementation. Owner: Karthik.
+ * See docs/stage-1-contracts.md for the module contract.
  */
 public final class Menu {
     // Composition: Menu creates and owns its three dishes.
@@ -22,6 +22,12 @@ public final class Menu {
 
     /** Lookup a dish by name; reject an unknown name rather than inventing a dish. */
     public MenuItem findByName(String name) {
-        throw new UnsupportedOperationException("TODO: Karthik - menu lookup");
+        if (name == null) {
+            throw new IllegalArgumentException("Dish name must not be null");
+        }
+        return items.stream()
+                .filter(item -> item.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No dish named " + name));
     }
 }
