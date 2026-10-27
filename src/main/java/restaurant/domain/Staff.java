@@ -1,15 +1,16 @@
 package restaurant.domain;
 
 /**
- * Stage 1 prototype. Owner: Yuma.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Shared one-action-per-turn behaviour for staff. Owner: Yuma.
  */
 public abstract class Staff {
     private final String name;
     private boolean actedThisTurn;
 
     protected Staff(String name) {
-        // TODO Yuma: validate name.
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Staff name must not be blank");
+        }
         this.name = name;
         this.actedThisTurn = false;
     }
@@ -19,16 +20,19 @@ public abstract class Staff {
 
     /** GameMgr resets every staff member, including Cashier, at turn start. */
     public final void resetForTurn() {
-        throw new UnsupportedOperationException("TODO: Yuma - reset the one-task flag");
+        actedThisTurn = false;
     }
 
     /** Shared guard. An invalid attempt must not consume the task. */
     protected final void requireAvailable() {
-        throw new UnsupportedOperationException("TODO: Yuma - reject a second task");
+        if (actedThisTurn) {
+            throw new IllegalStateException(name + " has already acted this turn");
+        }
     }
 
     /** Call only after a complete successful action. */
     protected final void markActed() {
-        throw new UnsupportedOperationException("TODO: Yuma - record a successful task");
+        requireAvailable();
+        actedThisTurn = true;
     }
 }

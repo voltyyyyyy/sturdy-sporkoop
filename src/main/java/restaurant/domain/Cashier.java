@@ -1,8 +1,7 @@
 package restaurant.domain;
 
 /**
- * Stage 1 prototype. Owner: Yuma.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Collects at most one eligible payment each turn. Owner: Yuma.
  */
 public final class Cashier extends Staff {
     public Cashier(String name) {
@@ -15,6 +14,19 @@ public final class Cashier extends Staff {
      * GameMgr calls this automatically; the manager does not choose who pays.
      */
     public void collect(Restaurant restaurant, Customer customer, int turn) {
-        throw new UnsupportedOperationException("TODO: Yuma - collect one eligible payment");
+        requireAvailable();
+        if (restaurant == null || customer == null) {
+            throw new IllegalArgumentException("Restaurant and customer must not be null");
+        }
+        if (turn < customer.getArrivalTurn()) {
+            throw new IllegalArgumentException("Payment turn cannot precede arrival");
+        }
+        Customer next = restaurant.nextReadyToPay(turn)
+                .orElseThrow(() -> new IllegalStateException("No customer is eligible to pay"));
+        if (next != customer) {
+            throw new IllegalStateException("Collect from the oldest eligible customer first");
+        }
+        restaurant.recordPayment(customer, turn);
+        markActed();
     }
 }
