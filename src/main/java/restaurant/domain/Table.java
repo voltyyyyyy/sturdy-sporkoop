@@ -16,10 +16,24 @@ public final class Table {
     public boolean isFree() { return occupant == null; }
 
     public void seat(Customer customer) {
-        throw new UnsupportedOperationException("TODO: Qiyun - exclusive table occupancy");
+        if (customer == null){
+            throw new IllegalArgumentException("Cannot seat a null customer");
+        }
+        if(!isFree()){
+            throw new IllegalStateException("Table" + tableId + " is already occupied");
+        }
+        occupant = customer;
     }
 
     public void clear() {
-        throw new UnsupportedOperationException("TODO: Qiyun - guarded table clearing");
+        if (occupant == null){
+            return;
+        }
+        CustomerState state = occupant.getState();
+        if (state != CustomerState.PAID && state != CustomerState.LEFT){
+            throw new IllegalStateException("Table" + tableId + " cannot be cleared while the customer is " + state);
+        }
+
+        occupant = null;
     }
 }

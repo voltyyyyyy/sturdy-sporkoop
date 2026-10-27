@@ -16,14 +16,31 @@ public final class WaitingQueue {
     public boolean isEmpty() { return customers.isEmpty(); }
 
     public void add(Customer customer) {
-        throw new UnsupportedOperationException("TODO: Qiyun - arrival-ordered queue insertion");
+        if (customer == null){
+            throw new IllegalArgumentException("Cannot queue a null customer");
+        }
+        if (customer.getState()!= CustomerState.WAITING){
+            throw new IllegalStateException("Only WAITING customers can join the queue, but the customer is " +  customer.getState());
+        }
+        if (customers.contains(customer)){
+            throw new IllegalStateException("Customer already in queue!");
+        }
+        customers.add(customer);
     }
 
     public Optional<Customer> peek() {
-        throw new UnsupportedOperationException("TODO: Qiyun - oldest queued customer");
+        if (customers.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(customers.get(0));
     }
 
     public void remove(Customer customer) {
-        throw new UnsupportedOperationException("TODO: Qiyun - queue removal");
+        if (customer == null) {
+            throw new IllegalArgumentException("Cannot remove a null customer");
+        }
+        if (!customers.remove(customer)) {
+            throw new IllegalArgumentException("Customer is not in this queue");
+        }
     }
 }
