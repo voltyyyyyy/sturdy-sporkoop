@@ -1,8 +1,7 @@
 package restaurant.domain;
 
 /**
- * Stage 1 prototype. Owner: Qiyun.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * A single restaurant table. Owner: Qiyun.
  */
 public final class Table {
     private final int tableId;

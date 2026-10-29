@@ -7,8 +7,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 /**
- * Stage 1 prototype. Owner: Qiyun.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Stage 1 restaurant aggregate. Owner: Qiyun.
  */
 public final class Restaurant {
     private static final int REQUIRED_PAID_CUSTOMERS = 4;

@@ -1,6 +1,6 @@
 # Stage 1 contracts and ownership
 
-The supplied report is the architectural reference. These are implementation contracts for its 17 types, not a claim that the TODOs are implemented. The report's diagram image was not supplied; this scaffold follows the types, relationships and responsibilities described in its text.
+This document records the architecture and behavior of the implemented 17 Stage 1 types. The report's diagram image is not in this repository; the class relationships and responsibilities below follow its written design.
 
 ## Boundaries and OOP evidence
 
@@ -32,16 +32,16 @@ A Table's private occupant reference implements the UML association to Customer.
 
 ## Six turn steps - Pluem sequences, domain owners implement
 
-Before the steps, reset Waiter, Chef and Cashier once and display the start-of-turn state.
+At each turn start, reset Waiter, Chef and Cashier once, process any scheduled arrival, then display the resulting state before asking for manager choices.
 
 1. **Arrivals.** On turns 1, 4, 7, 10, 13 and 16, GameMgr creates a RegularCustomer and adds it to the waiting queue. Customer constructor starts at satisfaction 100 and WAITING.
-2. **Manager choices.** Read at most one successful Waiter task and one successful Chef task, or wait for either. Only the customer chooses food. Numeric task codes belong to input/controller dispatch, not the domain model.
+2. **Manager choices.** Read at most one successful Waiter task and one successful Chef task, or wait for either. Only the customer chooses food. The current deterministic rule selects the first menu item, Salad, and the UI shows the choice when the order is placed. Numeric task codes belong to input/controller dispatch, not the domain model.
 3. **Kitchen and serving.** Execute the Waiter before the Chef. The Chef may work on an order taken this turn. Prompting can be interleaved with execution to make that new order selectable. A dish completed by the Chef this turn cannot be served until the next turn at the earliest.
 4. **Eating and payment.** Delegate eating progression to customers through Restaurant. A customer served on turn N becomes READY_TO_PAY on N+1 at the earliest and pays on N+2 at the earliest. Cashier automatically collects at most one payment from the oldest eligible customer. Restaurant owns payment accounting and table clearing.
 5. **Waiting and abandonment.** For each queued or unserved seated Customer, call loseSatisfaction(waitingPenalty()). At zero, transition to LEFT, cancel any unserved order, remove from queue or clear its table, and count one abandonment. EATING, READY_TO_PAY, PAID and LEFT customers lose nothing.
 6. **Result.** Show the end-of-turn values. Always finish all 18 turns; do not stop early after reaching a target. After turn 18 ask Restaurant for GameResult and display it.
 
-The turn-16 arrival cannot pay by turn 18. Verify this after implementation; no special-case rule should artificially exclude that customer.
+The turn-16 arrival cannot pay by turn 18. The full-game test checks that the sixth arrival remains unpaid at the end; no special-case rule excludes that customer.
 
 ## Module handoffs for parallel work
 
@@ -77,16 +77,16 @@ Check a successful action consumes the turn, a second action fails, an invalid a
 
 ### Pluem - controller and UI
 
-Own GameMgr and ConsoleUI. All method signatures are present so orchestration and display can be written before the other modules are complete. Use local fixtures/test doubles for unfinished collaborators.
+Own GameMgr and ConsoleUI. GameMgr owns turn sequencing and delegates actions to domain and staff methods. ConsoleUI owns all console input, output and money formatting.
 
 GameMgr.main() is the entry point; do not add Main, Action, Request, TurnEngine or GameConfig. Keep price constants, satisfaction arithmetic, eligibility guards and victory calculations out of GameMgr and ConsoleUI. Display model values and call staff/domain operations.
 
-Check input retries, staff resets, six arrival turns, exactly 18 turns, Waiter-before-Chef ordering, automatic payment, result display and no console access outside ConsoleUI.
+The full-game test checks input retries, six arrival turns, exactly 18 turns, Waiter-before-Chef ordering, automatic payment and both result endings. Console access stays inside ConsoleUI.
 
-## Integration checklist - after implementing TODOs
+## Verification checklist
 
-- Compile all 17 types with JDK 17+; agree API changes across owners before committing them.
-- Reproduce Pasta arrival/seat on turn 1, order/unit 1 on turn 2, unit 2 on turn 3, serve on turn 4, READY_TO_PAY on turn 5 and payment on turn 6; satisfaction is 76 at payment.
-- Verify a complete winning run and a complete losing run. Record actual input and output then; no old transcript is retained as evidence.
-- Verify abandoned/unpaid orders contribute no revenue, invalid actions are retryable, and the final arrival cannot pay in time.
-- Produce a class diagram from the implemented design and verify E1, P1 and C1 against the code.
+- `build.ps1` compiles all 17 production types with JDK 17+.
+- `bash tests/domain/run.sh` checks menu, customer-state, satisfaction, order preparation and cancellation behavior. Pasta's two preparation units are checked here.
+- `bash tests/restaurant/run.sh` and `bash tests/staff/run.sh` check their modules against isolated collaborators.
+- `bash tests/game/run.sh` exercises the actual CLI through all 18 turns, including retries, both endings, arrival/payment timing and the final arrival.
+- Keep the class diagram aligned with the implemented design and verify E1, P1 and C1 against the code.

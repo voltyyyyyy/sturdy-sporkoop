@@ -10,4 +10,4 @@ if ($sources.Count -ne 17) {
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
 javac -encoding UTF-8 --release 17 -Xlint:all -Werror -d $outputRoot $sources
 if ($LASTEXITCODE -ne 0) { throw "Compilation failed." }
-Write-Host "Compiled all 17 Stage 1 prototypes. Game-rule TODOs remain unimplemented."
+Write-Host "Compiled all 17 Stage 1 classes."

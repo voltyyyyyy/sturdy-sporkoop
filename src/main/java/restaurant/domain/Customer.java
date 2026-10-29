@@ -90,8 +90,14 @@ public abstract class Customer {
         if(turn<arrivalTurn){
             throw new IllegalArgumentException("Eating turn cannot precede arrival");
         }
-        //must have 1 stage for eating, before ready to pay
-        if(state==CustomerState.EATING && turn >servedTurn){
+        if (state != CustomerState.EATING) {
+            throw new IllegalStateException("Only an eating customer can become ready to pay");
+        }
+        if (turn < servedTurn) {
+            throw new IllegalArgumentException("Eating turn cannot precede serving turn");
+        }
+        // Serving does not count as the full eating turn.
+        if (turn > servedTurn) {
             readyToPayTurn=turn;
             state=CustomerState.READY_TO_PAY;
         }

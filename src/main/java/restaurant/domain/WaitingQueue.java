@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Stage 1 prototype. Owner: Qiyun.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Arrival-ordered queue for waiting customers. Owner: Qiyun.
  */
 public final class WaitingQueue {
     // Aggregation: arrivals are created outside this queue and remain valid after removal.

@@ -1,8 +1,7 @@
 package restaurant.domain;
 
 /**
- * Stage 1 prototype. Owner: Mingchen.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Customer lifecycle states. Owner: Mingchen.
  */
 public enum CustomerState {
     WAITING,

@@ -3,8 +3,7 @@ package restaurant.domain;
 import java.util.OptionalDouble;
 
 /**
- * Stage 1 prototype. Owner: Qiyun.
- * See docs/stage-1-contracts.md before implementing TODO methods.
+ * Stage 1 result value object. Owner: Qiyun.
  */
 public final class GameResult {
     private final boolean victory;

@@ -53,10 +53,10 @@ public final class Order {
         status = OrderStatus.PAID;
     }
 
-    /** Cancel an unserved order on abandonment; reject a served or paid order. */
+    /** Cancel a placed or ready order on abandonment; cancelled orders are terminal. */
     public void cancel() {
-        if (status == OrderStatus.SERVED || status == OrderStatus.PAID) {
-            throw new IllegalStateException("Cannot cancel a served or paid order");
+        if (status != OrderStatus.PLACED && status != OrderStatus.READY) {
+            throw new IllegalStateException("Cannot cancel an order that is " + status);
         }
         status = OrderStatus.CANCELLED;
     }
