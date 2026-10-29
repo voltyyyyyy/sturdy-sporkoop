@@ -2,7 +2,6 @@ package restaurant.domain;
 
 
 
-
 public enum OrderStatus {
     PLACED,
     READY,

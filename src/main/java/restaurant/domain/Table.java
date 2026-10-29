@@ -2,7 +2,6 @@ package restaurant.domain;
 
 
 
-
 public final class Table {
     private final int tableId;
     private Customer occupant;

@@ -49,8 +49,8 @@ public final class Order {
     }
 
     public void cancel() {
-        if (status == OrderStatus.SERVED || status == OrderStatus.PAID) {
-            throw new IllegalStateException("Cannot cancel a served or paid order");
+        if (status != OrderStatus.PLACED && status != OrderStatus.READY) {
+            throw new IllegalStateException("Cannot cancel an order that is " + status);
         }
         status = OrderStatus.CANCELLED;
     }

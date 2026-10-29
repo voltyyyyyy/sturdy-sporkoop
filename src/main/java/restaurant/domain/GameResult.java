@@ -4,7 +4,6 @@ import java.util.OptionalDouble;
 
 
 
-
 public final class GameResult {
     private final boolean victory;
     private final int servedCount;

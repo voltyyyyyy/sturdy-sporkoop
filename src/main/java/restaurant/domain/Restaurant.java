@@ -8,7 +8,6 @@ import java.util.OptionalDouble;
 
 
 
-
 public final class Restaurant {
     private static final int REQUIRED_PAID_CUSTOMERS = 4;
     private static final long REQUIRED_REVENUE_CENTS = 4500L;

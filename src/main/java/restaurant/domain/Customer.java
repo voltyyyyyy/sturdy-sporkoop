@@ -81,7 +81,13 @@ public abstract class Customer {
         if(turn<arrivalTurn){
             throw new IllegalArgumentException("Eating turn cannot precede arrival");
         }
-        if(state==CustomerState.EATING && turn >servedTurn){
+        if (state != CustomerState.EATING) {
+            throw new IllegalStateException("Only an eating customer can become ready to pay");
+        }
+        if (turn < servedTurn) {
+            throw new IllegalArgumentException("Eating turn cannot precede serving turn");
+        }
+        if (turn > servedTurn) {
             readyToPayTurn=turn;
             state=CustomerState.READY_TO_PAY;
         }
