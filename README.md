@@ -14,7 +14,7 @@ This repository replaces the previous implementation with prototypes for the **1
 | Karthik | `MenuItem`, `Menu`, `Order`, `OrderStatus` |
 | Qiyun | `Restaurant`, `Table`, `WaitingQueue`, `GameResult` |
 | Yuma | `Staff`, `Waiter`, `Chef`, `Cashier` |
-| Pluem | `GameMgr`, `ConsoleUI` |
+| Chamadol Thongthornpatch | `GameMgr`, `ConsoleUI` |
 
 All shared method signatures already exist and compile together. Implement your own files against these signatures. Agree any signature changes with affected owners first. Use small local test fixtures or test doubles while another owner's TODO remains unfinished; do not implement their rules in your module.
 
