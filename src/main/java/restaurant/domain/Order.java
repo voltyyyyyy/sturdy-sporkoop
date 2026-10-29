@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * Stage 1 implementation. Owner: Karthik.
+ * Stage 1 implementation. Owner: Gangula Karthik.
  * See docs/stage-1-contracts.md for the module contract.
  */
 public final class Order {

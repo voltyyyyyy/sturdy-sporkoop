@@ -2,19 +2,19 @@
 
 SC2002 / SC2302 Object-Oriented Design and Programming
 
-Team: Mingchen, Karthik, Yuma, Qiyun, Chamadol Thongthornpatch
+Team: Yang Mingchen, Gangula Karthik, Ochi Yuma, Zhang Qiyun, Chamadol Thongthornpatch (Pluem)
 
 This is a playable, offline Stage 1 restaurant game with an 18-turn command-line interface. The implementation contains the 17 types in the Stage 1 design and uses no external dependencies.
 
-## Work allocation
+## Task allocation
 
-| Owner | Files |
-| --- | --- |
-| Mingchen | `Customer`, `RegularCustomer`, `CustomerState` |
-| Karthik | `MenuItem`, `Menu`, `Order`, `OrderStatus` |
-| Qiyun | `Restaurant`, `Table`, `WaitingQueue`, `GameResult` |
-| Yuma | `Staff`, `Waiter`, `Chef`, `Cashier` |
-| Chamadol Thongthornpatch | `GameMgr`, `ConsoleUI` |
+| Member and area | Files | Responsibilities |
+| --- | --- | --- |
+| **Yang Mingchen — Customer behaviour** | `Customer.java`, `RegularCustomer.java`, `CustomerState.java` | Guard customer-state changes; handle satisfaction loss, clamping and abandonment; define the deterministic food choice and serving/readiness turns. |
+| **Gangula Karthik — Menu and orders** | `MenuItem.java`, `Menu.java`, `Order.java`, `OrderStatus.java` | Validate dishes and prices; provide menu lookup and one-unit preparation; guard serving, payment and cancellation while keeping order prices locked. |
+| **Zhang Qiyun — Restaurant, storage and scoring** | `Restaurant.java`, `Table.java`, `WaitingQueue.java`, `GameResult.java` | Enforce table and queue rules; manage eligible payments, snapshots and cleanup; calculate the final score and victory result. |
+| **Ochi Yuma — Staff actions** | `Staff.java`, `Waiter.java`, `Chef.java`, `Cashier.java` | Enforce one successful staff task per turn; implement Waiter seating, ordering and serving; delegate Chef preparation and Cashier collection to domain methods. |
+| **Chamadol Thongthornpatch (Pluem) — Game flow and console** | `GameMgr.java`, `ConsoleUI.java` | Handle prompts, displays, parsing and errors; sequence all 18 turns, arrivals and staff actions; run automatic eating/payment and display the final result. |
 
 ## Structure
 

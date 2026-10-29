@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 /**
- * Stage 1 restaurant aggregate. Owner: Qiyun.
+ * Stage 1 restaurant aggregate. Owner: Zhang Qiyun.
  */
 public final class Restaurant {
     private static final int REQUIRED_PAID_CUSTOMERS = 4;

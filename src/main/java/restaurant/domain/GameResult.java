@@ -3,7 +3,7 @@ package restaurant.domain;
 import java.util.OptionalDouble;
 
 /**
- * Stage 1 result value object. Owner: Qiyun.
+ * Stage 1 result value object. Owner: Zhang Qiyun.
  */
 public final class GameResult {
     private final boolean victory;

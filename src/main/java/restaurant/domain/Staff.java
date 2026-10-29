@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * Shared one-action-per-turn behaviour for staff. Owner: Yuma.
+ * Shared one-action-per-turn behaviour for staff. Owner: Ochi Yuma.
  */
 public abstract class Staff {
     private final String name;

@@ -30,7 +30,7 @@ A Table's private occupant reference implements the UML association to Customer.
 - Track customer serving and readiness turns separately so eating and payment cannot occur prematurely.
 - Standard library collections and Optional types are permitted; add no project types beyond the report's 17.
 
-## Six turn steps - Pluem sequences, domain owners implement
+## Six turn steps - Chamadol Thongthornpatch (Pluem) sequences
 
 At each turn start, reset Waiter, Chef and Cashier once, process any scheduled arrival, then display the resulting state before asking for manager choices.
 
@@ -45,7 +45,7 @@ The turn-16 arrival cannot pay by turn 18. The full-game test checks that the si
 
 ## Module handoffs for parallel work
 
-### Mingchen - customer behaviour
+### Yang Mingchen - customer behaviour
 
 Own Customer, RegularCustomer and CustomerState. Implement customer-owned food selection and document its deterministic rule. Keep state/satisfaction guards in Customer. Work against Menu.getItems() and Order.getStatus(); do not implement menu, preparation or restaurant scoring.
 
@@ -53,13 +53,13 @@ CustomerState has exactly WAITING, SEATED, EATING, READY_TO_PAY, PAID and LEFT. 
 
 Check waiting penalty 8 through a Customer reference, satisfaction clamping, invalid transitions, one order per customer, and serving/eating/payment timing.
 
-### Karthik - menu and orders
+### Gangula Karthik - menu and orders
 
 Own MenuItem, Menu, Order and OrderStatus. MenuItem is immutable dish data. Menu owns exactly Salad (900/1), Burger (1500/1) and Pasta (1800/2). No dish subclasses. PLACED is the initial order status; the five values are PLACED, READY, SERVED, PAID and CANCELLED.
 
 Only Order owns preparation arithmetic and order-status guards. Order knows its chosen item and captured price; it does not know a Table. Check one/two-unit completion, rejecting preparation after READY, rejecting payment before SERVED, cancellation and locked pricing.
 
-### Qiyun - restaurant, storage and result
+### Zhang Qiyun - restaurant, storage and scoring
 
 Own Restaurant, Table, WaitingQueue and GameResult. Implement ownership, queue order, read-only access, eligibility lookup, paid-only accounting and abandonment cleanup. Delegate customer/order state changes to their public methods.
 
@@ -67,7 +67,7 @@ recordPayment(customer, turn) owns the payment transaction: validate eligibility
 
 Implement the average using snapshots from payment time. Victory is a conjunction: servedCount >= 4, revenueCents >= 4500 and average >= 60. No average means defeat. Check table capacity, queue removal, duplicate payment, abandonment, zero payments and each exact threshold.
 
-### Yuma - staff
+### Ochi Yuma - staff actions
 
 Own Staff, Waiter, Chef and Cashier. Their package is restaurant.domain because the report labels staff as entities.
 
@@ -75,7 +75,7 @@ Waiter coordinates domain methods for seating, taking orders and serving. Chef d
 
 Check a successful action consumes the turn, a second action fails, an invalid attempt consumes nothing, resets restore availability, and each action updates its collaborators once.
 
-### Pluem - controller and UI
+### Chamadol Thongthornpatch (Pluem) - game flow and console
 
 Own GameMgr and ConsoleUI. GameMgr owns turn sequencing and delegates actions to domain and staff methods. ConsoleUI owns all console input, output and money formatting.
 

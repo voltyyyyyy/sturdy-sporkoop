@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * A single restaurant table. Owner: Qiyun.
+ * A single restaurant table. Owner: Zhang Qiyun.
  */
 public final class Table {
     private final int tableId;

@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * Collects at most one eligible payment each turn. Owner: Yuma.
+ * Collects at most one eligible payment each turn. Owner: Ochi Yuma.
  */
 public final class Cashier extends Staff {
     public Cashier(String name) {

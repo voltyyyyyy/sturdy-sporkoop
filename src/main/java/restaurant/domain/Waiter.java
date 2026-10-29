@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * Coordinates one seating, ordering or serving task each turn. Owner: Yuma.
+ * Coordinates one seating, ordering or serving task each turn. Owner: Ochi Yuma.
  */
 public final class Waiter extends Staff {
     public Waiter(String name) {

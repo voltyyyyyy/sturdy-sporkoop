@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * Prepares at most one order unit each turn. Owner: Yuma.
+ * Prepares at most one order unit each turn. Owner: Ochi Yuma.
  */
 public final class Chef extends Staff {
     public Chef(String name) {

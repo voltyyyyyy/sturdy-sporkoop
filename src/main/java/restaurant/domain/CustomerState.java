@@ -1,7 +1,7 @@
 package restaurant.domain;
 
 /**
- * Customer lifecycle states. Owner: Mingchen.
+ * Customer lifecycle states. Owner: Yang Mingchen.
  */
 public enum CustomerState {
     WAITING,

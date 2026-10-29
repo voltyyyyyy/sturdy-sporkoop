@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Arrival-ordered queue for waiting customers. Owner: Qiyun.
+ * Arrival-ordered queue for waiting customers. Owner: Zhang Qiyun.
  */
 public final class WaitingQueue {
     // Aggregation: arrivals are created outside this queue and remain valid after removal.
