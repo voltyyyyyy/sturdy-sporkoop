@@ -14,7 +14,7 @@ This is a playable, offline Stage 1 restaurant game with an 18-turn command-line
 | **Gangula Karthik — Menu and orders** | `MenuItem.java`, `Menu.java`, `Order.java`, `OrderStatus.java` | Validate dishes and prices; provide menu lookup and one-unit preparation; guard serving, payment and cancellation while keeping order prices locked. |
 | **Zhang Qiyun — Restaurant, storage and scoring** | `Restaurant.java`, `Table.java`, `WaitingQueue.java`, `GameResult.java` | Enforce table and queue rules; manage eligible payments, snapshots and cleanup; calculate the final score and victory result. |
 | **Ochi Yuma — Staff actions** | `Staff.java`, `Waiter.java`, `Chef.java`, `Cashier.java` | Enforce one successful staff task per turn; implement Waiter seating, ordering and serving; delegate Chef preparation and Cashier collection to domain methods. |
-| **Chamadol Thongthornpatch (Pluem) — Game flow and console** | `GameMgr.java`, `ConsoleUI.java` | Handle prompts, displays, parsing and errors; sequence all 18 turns, arrivals and staff actions; run automatic eating/payment and display the final result. |
+| **Chamadol Thongthornpatch — Game flow and console** | `GameMgr.java`, `ConsoleUI.java` | Handle prompts, displays, parsing and errors; sequence all 18 turns, arrivals and staff actions; run automatic eating/payment and display the final result. |
 
 ## Structure
 
