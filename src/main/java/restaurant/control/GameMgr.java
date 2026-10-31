@@ -13,8 +13,6 @@ import restaurant.ui.ConsoleUI;
 
 import java.util.Optional;
 
-
-
 public final class GameMgr {
     private static final int TOTAL_TURNS = 18;
     private static final int[] ARRIVAL_TURNS = {1, 4, 7, 10, 13, 16};
@@ -49,13 +47,6 @@ public final class GameMgr {
         ui.showResult(result);
         ui.showBillHistory(restaurant);
     }
-
-
-
-
-
-
-
 
     private void runTurn(int turn) {
         waiter.resetForTurn();
@@ -150,9 +141,6 @@ public final class GameMgr {
             }
         }
     }
-
-
-
 
     private void processEatingAndPayment(int turn) {
         restaurant.advanceEating(turn);

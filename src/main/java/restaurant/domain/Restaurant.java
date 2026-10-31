@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
-
-
 public final class Restaurant {
     private static final int REQUIRED_PAID_CUSTOMERS = 4;
     private static final long REQUIRED_REVENUE_CENTS = 4500L;
@@ -104,11 +102,6 @@ public final class Restaurant {
         return Optional.ofNullable(oldest);
     }
 
-
-
-
-
-
     public void recordPayment(Customer customer, int turn) {
         if (customer == null) {
             throw new IllegalArgumentException("Cannot record payment for a null customer");
@@ -135,13 +128,6 @@ public final class Restaurant {
         servedCount++;
         table.clear();
     }
-
-
-
-
-
-
-
 
     public List<Customer> applyWaitingPenalties() {
         List<Customer> departed = new ArrayList<>();
@@ -179,9 +165,6 @@ public final class Restaurant {
                 .mapToInt(Integer::intValue)
                 .average();
     }
-
-
-
 
     public GameResult createResult(int turnsUsed) {
         OptionalDouble average = getAverageSatisfaction();

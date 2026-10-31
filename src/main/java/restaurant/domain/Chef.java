@@ -1,7 +1,5 @@
 package restaurant.domain;
 
-
-
 public final class Chef extends Staff {
     public Chef(String name) {
         super(name);

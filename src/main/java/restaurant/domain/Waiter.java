@@ -1,14 +1,10 @@
 package restaurant.domain;
 
 
-
 public final class Waiter extends Staff {
     public Waiter(String name) {
         super(name);
     }
-
-
-
 
 
     public void seat(Restaurant restaurant, Customer customer, Table table) {
@@ -36,10 +32,6 @@ public final class Waiter extends Staff {
         markActed();
     }
 
-
-
-
-
     public Order takeOrder(Restaurant restaurant, Customer customer) {
         requireAvailable();
         requireSeatedCustomer(restaurant, customer);
@@ -55,9 +47,6 @@ public final class Waiter extends Staff {
         markActed();
         return order;
     }
-
-
-
 
     public void serve(Restaurant restaurant, Customer customer, int turn) {
         requireAvailable();

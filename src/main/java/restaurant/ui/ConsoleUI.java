@@ -15,8 +15,6 @@ import restaurant.domain.Restaurant;
 import restaurant.domain.Table;
 import restaurant.domain.Waiter;
 
-
-
 public final class ConsoleUI {
     private final Scanner input;
 
@@ -52,10 +50,6 @@ public final class ConsoleUI {
         System.out.println("Staff tasks: " + taskStatus(waiter) + "; " + taskStatus(chef)
                 + "; " + taskStatus(cashier));
     }
-
-
-
-
 
     public int askWaiterTask() {
         while (true) {

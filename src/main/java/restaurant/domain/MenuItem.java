@@ -1,8 +1,5 @@
 package restaurant.domain;
 
-
-
-
 public final class MenuItem {
     private final String name;
     private final long priceCents;

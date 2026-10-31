@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-
 public final class WaitingQueue {
     private final List<Customer> customers = new ArrayList<>();
 

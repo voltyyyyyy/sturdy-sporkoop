@@ -1,7 +1,5 @@
 package restaurant.domain;
 
-
-
 public abstract class Staff {
     private final String name;
     private boolean actedThisTurn;

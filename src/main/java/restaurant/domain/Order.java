@@ -1,8 +1,5 @@
 package restaurant.domain;
 
-
-
-
 public final class Order {
     private final MenuItem item;
     private final long priceCents;

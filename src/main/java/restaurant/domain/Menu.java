@@ -2,9 +2,6 @@ package restaurant.domain;
 
 import java.util.List;
 
-
-
-
 public final class Menu {
     private final List<MenuItem> items = List.of(
             new MenuItem("Salad", 900L, 1),
