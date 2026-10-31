@@ -9,6 +9,7 @@ public final class Order {
 
     public Order(MenuItem item) { this.item = item; }
     public OrderStatus getStatus() { return status; }
+    public long getPriceCents() { return item.getPriceCents(); }
     public void advanceOneUnit() {
         if (rejectPreparation || status != OrderStatus.PLACED) {
             throw new IllegalStateException("Preparation rejected");

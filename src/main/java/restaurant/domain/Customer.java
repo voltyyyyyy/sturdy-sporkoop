@@ -34,6 +34,19 @@ public abstract class Customer {
     public int getServedTurn() { return servedTurn; }
     public int getReadyToPayTurn() { return readyToPayTurn; }
 
+    public long getBillCents() {
+        if (order==null || order.getStatus()==OrderStatus.CANCELLED) {
+            return 0;
+        }
+        return order.getPriceCents();
+    }
+
+    public boolean hasUnpaidBill() {
+        return order!=null
+                && order.getStatus()!=OrderStatus.CANCELLED
+                && order.getStatus()!=OrderStatus.PAID;
+    }
+
 
     public abstract int waitingPenalty();
 

@@ -47,6 +47,7 @@ public final class GameMgr {
         }
         GameResult result = restaurant.createResult(TOTAL_TURNS);
         ui.showResult(result);
+        ui.showBillHistory(restaurant);
     }
 
 
@@ -159,7 +160,7 @@ public final class GameMgr {
         if (readyCustomer.isPresent()) {
             Customer customer = readyCustomer.get();
             cashier.collect(restaurant, customer, turn);
-            ui.showMessage("Cashier collected payment from customer #" + customer.getCustomerId() + ".");
+            ui.showPayment(customer);
         }
     }
 }

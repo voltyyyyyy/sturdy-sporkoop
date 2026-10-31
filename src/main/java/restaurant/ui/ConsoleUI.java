@@ -98,6 +98,27 @@ public final class ConsoleUI {
                 + " | Abandoned: " + restaurant.getAbandonedCount()
                 + " | Revenue: " + formatMoney(restaurant.getRevenueCents())
                 + " | Average paid satisfaction: " + formatAverage(restaurant.getAverageSatisfaction()));
+        System.out.println("Bills: unpaid " + formatMoney(restaurant.getOutstandingBillCents())
+                + " | lost to walkouts " + formatMoney(restaurant.getLostBillCents()));
+    }
+
+    public void showPayment(Customer customer) {
+        System.out.println("Cashier collected payment from customer #" + customer.getCustomerId()
+                + " (" + formatMoney(customer.getBillCents()) + ").");
+    }
+
+    public void showBillHistory(Restaurant restaurant) {
+        System.out.println("Bills paid:");
+        List<Customer> paid = restaurant.getPaidCustomers();
+        if (paid.isEmpty()) {
+            System.out.println("  (none)");
+        }
+        for (Customer customer : paid) {
+            System.out.println("  Customer #" + customer.getCustomerId() + ": "
+                    + customer.getOrder().getItem().getName() + " " + formatMoney(customer.getBillCents()));
+        }
+        System.out.println("Unpaid bills: " + formatMoney(restaurant.getOutstandingBillCents())
+                + " | Lost to walkouts: " + formatMoney(restaurant.getLostBillCents()));
     }
 
     public void showResult(GameResult result) {

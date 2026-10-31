@@ -23,6 +23,7 @@ public final class Restaurant {
     private long revenueCents;
     private int servedCount;
     private int abandonedCount;
+    private long lostBillCents;
     private final List<Customer> paidCustomers = new ArrayList<>();
     private final List<Integer> paidSatisfaction = new ArrayList<>();
 
@@ -38,6 +39,20 @@ public final class Restaurant {
     public long getRevenueCents() { return revenueCents; }
     public int getServedCount() { return servedCount; }
     public int getAbandonedCount() { return abandonedCount; }
+    public long getLostBillCents() { return lostBillCents; }
+
+    public List<Customer> getPaidCustomers() { return List.copyOf(paidCustomers); }
+
+    public long getOutstandingBillCents() {
+        long outstanding = 0;
+        for (Table table : tables) {
+            Customer occupant = table.getOccupant();
+            if (occupant != null && occupant.hasUnpaidBill()) {
+                outstanding += occupant.getBillCents();
+            }
+        }
+        return outstanding;
+    }
 
     public List<Customer> getPresentCustomers() {
         List<Customer> present = new ArrayList<>(waitingQueue.getCustomers());
@@ -127,6 +142,7 @@ public final class Restaurant {
 
 
 
+
     public List<Customer> applyWaitingPenalties() {
         List<Customer> departed = new ArrayList<>();
         for (Customer c : getPresentCustomers()) {
@@ -141,6 +157,7 @@ public final class Restaurant {
             Order order = c.getOrder();
             if (order != null
                     && (order.getStatus() == OrderStatus.PLACED || order.getStatus() == OrderStatus.READY)) {
+                lostBillCents += order.getPriceCents();
                 order.cancel();
             }
 

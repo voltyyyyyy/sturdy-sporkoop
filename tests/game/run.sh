@@ -31,6 +31,9 @@ grep -Fq 'Paid customers: 5' "$test_output/victory.log"
 grep -Fq 'Revenue: $45.00' "$test_output/victory.log"
 grep -Fq 'Average paid-customer satisfaction: 84.0' "$test_output/victory.log"
 grep -Fq 'Turns used: 18' "$test_output/victory.log"
+grep -Fq 'Cashier collected payment from customer #1 ($9.00).' "$test_output/victory.log"
+grep -Fq 'Customer #5: Salad $9.00' "$test_output/victory.log"
+grep -Fq 'Unpaid bills: $0.00 | Lost to walkouts: $0.00' "$test_output/victory.log"
 if grep -Fq 'Cashier collected payment from customer #6' "$test_output/victory.log"; then
     echo 'The turn-16 arrival must not pay by turn 18.' >&2
     exit 1
@@ -67,5 +70,6 @@ grep -Fq '=== Turn 18 / 18 ===' "$test_output/defeat.log"
 grep -Fq '=== DEFEAT ===' "$test_output/defeat.log"
 grep -Fq 'Paid customers: 0' "$test_output/defeat.log"
 grep -Fq 'Turns used: 18' "$test_output/defeat.log"
+grep -Fxq '  (none)' "$test_output/defeat.log"
 
 echo 'Passed full-game victory, defeat, turn-order, arrival, timing and input-retry checks.'
