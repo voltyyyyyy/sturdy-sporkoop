@@ -35,8 +35,10 @@ public final class DomainBehaviorTest {
         Customer customer = new RegularCustomer(2, 1);
         customer.markSeated();
         expect(IllegalStateException.class, () -> customer.advanceEating(1));
+        check(customer.getBillCents() == 0 && !customer.hasUnpaidBill());
         Order order = new Order(customer.chooseFood(new Menu()));
         customer.placeOrder(order);
+        check(customer.getBillCents() == 900L && customer.hasUnpaidBill());
         expect(IllegalStateException.class, () -> customer.markServed(1));
         order.advanceOneUnit();
         order.markServed();
@@ -53,6 +55,17 @@ public final class DomainBehaviorTest {
         customer.markPaid();
         customer.loseSatisfaction(8);
         check(customer.getState() == CustomerState.PAID && customer.getSatisfaction() == 100);
+        // A paid customer keeps the bill amount but owes nothing.
+        check(customer.getBillCents() == 900L && !customer.hasUnpaidBill());
+
+        // A cancelled order is never billed.
+        Customer walkout = new RegularCustomer(3, 1);
+        walkout.markSeated();
+        Order cancelled = new Order(new Menu().findByName("Pasta"));
+        walkout.placeOrder(cancelled);
+        check(walkout.getBillCents() == 1800L && walkout.hasUnpaidBill());
+        cancelled.cancel();
+        check(walkout.getBillCents() == 0 && !walkout.hasUnpaidBill());
     }
 
     private static void orderPreparationAndCancellation() {

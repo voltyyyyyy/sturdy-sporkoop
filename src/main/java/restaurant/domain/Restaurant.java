@@ -26,6 +26,8 @@ public final class Restaurant {
     // Completed, paid customers: the report's served-count scoring metric.
     private int servedCount;
     private int abandonedCount;
+    // Bills cancelled because the customer left before being served.
+    private long lostBillCents;
     private final List<Customer> paidCustomers = new ArrayList<>();
     private final List<Integer> paidSatisfaction = new ArrayList<>();
 
@@ -42,6 +44,23 @@ public final class Restaurant {
     public long getRevenueCents() { return revenueCents; }
     public int getServedCount() { return servedCount; }
     public int getAbandonedCount() { return abandonedCount; }
+    public long getLostBillCents() { return lostBillCents; }
+
+    /** Bill history: paid customers in payment order; each keeps its paid bill. */
+    public List<Customer> getPaidCustomers() { return List.copyOf(paidCustomers); }
+
+    /** Total still owed by seated customers who have ordered but not paid yet. */
+    public long getOutstandingBillCents() {
+        long outstanding = 0;
+        // Queued customers have no order, and paying customers leave their table.
+        for (Table table : tables) {
+            Customer occupant = table.getOccupant();
+            if (occupant != null && occupant.hasUnpaidBill()) {
+                outstanding += occupant.getBillCents();
+            }
+        }
+        return outstanding;
+    }
 
     /** Snapshot used for iteration; never expose mutable restaurant collections. */
     public List<Customer> getPresentCustomers() {
@@ -138,7 +157,8 @@ public final class Restaurant {
      * For each waiting/unserved seated customer, call
      * customer.loseSatisfaction(customer.waitingPenalty()).
      * At zero: cancel any unserved order, call leave(), remove from queue or clear
-     * table, and increment abandonedCount once. Return the departing customers.
+     * table, and increment abandonedCount once. A cancelled order's price is added
+     * to lostBillCents. Return the departing customers.
      * Never test for RegularCustomer (P1).
      */
     public List<Customer> applyWaitingPenalties() {
@@ -157,6 +177,7 @@ public final class Restaurant {
             Order order = c.getOrder();
             if (order != null
                     && (order.getStatus() == OrderStatus.PLACED || order.getStatus() == OrderStatus.READY)) {
+                lostBillCents += order.getPriceCents();
                 order.cancel();
             }
 

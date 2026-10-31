@@ -93,6 +93,8 @@ public final class RestaurantTest {
         }
         check(queued.getSatisfaction() == 4 && waitingForFood.getSatisfaction() == 4);
         check(eating.getSatisfaction() == 100);
+        // Both seated orders are owed; the queued customer has not ordered.
+        check(restaurant.getOutstandingBillCents() == 2400L && restaurant.getLostBillCents() == 0);
 
         List<Customer> departed = restaurant.applyWaitingPenalties();
         check(departed.equals(List.of(queued, waitingForFood)));
@@ -103,10 +105,12 @@ public final class RestaurantTest {
         check(restaurant.getAbandonedCount() == 2);
         check(restaurant.findTable(2).getOccupant() == eating && eating.getSatisfaction() == 100);
         check(served.getStatus() == OrderStatus.SERVED && served.cancelCalls == 0);
+        // The walkout's Salad moves from outstanding to lost.
+        check(restaurant.getOutstandingBillCents() == 1500L && restaurant.getLostBillCents() == 900L);
 
         // Departed customers are gone, so they are never penalised or counted again.
         check(restaurant.applyWaitingPenalties().isEmpty());
-        check(restaurant.getAbandonedCount() == 2);
+        check(restaurant.getAbandonedCount() == 2 && restaurant.getLostBillCents() == 900L);
         check(restaurant.getRevenueCents() == 0 && restaurant.getServedCount() == 0);
     }
 
@@ -129,6 +133,7 @@ public final class RestaurantTest {
         expect(IllegalStateException.class, () -> restaurant.recordPayment(earlier, 5));
         check(earlierOrder.getStatus() == OrderStatus.SERVED && earlier.getState() == CustomerState.READY_TO_PAY);
         check(restaurant.getRevenueCents() == 0 && restaurant.getServedCount() == 0);
+        check(restaurant.getOutstandingBillCents() == 3300L && restaurant.getPaidCustomers().isEmpty());
 
         // Both are eligible on turn 6; the earlier arrival is picked even on table 2.
         check(restaurant.nextReadyToPay(6).orElseThrow() == earlier);
@@ -136,6 +141,9 @@ public final class RestaurantTest {
         restaurant.recordPayment(earlier, 6);
         check(earlierOrder.getStatus() == OrderStatus.PAID && earlier.getState() == CustomerState.PAID);
         check(restaurant.getRevenueCents() == 1800L && restaurant.getServedCount() == 1);
+        check(restaurant.getOutstandingBillCents() == 1500L);
+        check(restaurant.getPaidCustomers().equals(List.of(earlier)));
+        expect(UnsupportedOperationException.class, () -> restaurant.getPaidCustomers().clear());
         check(restaurant.findTable(2).isFree());
         check(restaurant.getAverageSatisfaction().getAsDouble() == 100.0);
 
@@ -150,6 +158,10 @@ public final class RestaurantTest {
         restaurant.recordPayment(later, 7);
         check(restaurant.getRevenueCents() == 3300L && restaurant.getServedCount() == 2);
         check(restaurant.nextReadyToPay(8).isEmpty());
+        // Bill history is in payment order, and every collected bill matches revenue.
+        check(restaurant.getPaidCustomers().equals(List.of(earlier, later)));
+        check(earlier.getBillCents() + later.getBillCents() == restaurant.getRevenueCents());
+        check(restaurant.getOutstandingBillCents() == 0 && restaurant.getLostBillCents() == 0);
     }
 
     private static void zeroPayments() {

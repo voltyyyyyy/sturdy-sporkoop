@@ -38,6 +38,22 @@ public abstract class Customer {
     public int getServedTurn() { return servedTurn; }
     public int getReadyToPayTurn() { return readyToPayTurn; }
 
+    //bill is the price locked into the order, so it is read from the order instead of stored twice
+    //0 before ordering, or when the order was cancelled because the customer left
+    public long getBillCents() {
+        if (order==null || order.getStatus()==OrderStatus.CANCELLED) {
+            return 0;
+        }
+        return order.getPriceCents();
+    }
+
+    //bill is owed from placing the order until the order is paid
+    public boolean hasUnpaidBill() {
+        return order!=null
+                && order.getStatus()!=OrderStatus.CANCELLED
+                && order.getStatus()!=OrderStatus.PAID;
+    }
+
 
     public abstract int waitingPenalty();
 

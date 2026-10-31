@@ -49,7 +49,7 @@ The turn-16 arrival cannot pay by turn 18. The full-game test checks that the si
 
 Own Customer, RegularCustomer and CustomerState. Implement customer-owned food selection and document its deterministic rule. Keep state/satisfaction guards in Customer. Work against Menu.getItems() and Order.getStatus(); do not implement menu, preparation or restaurant scoring.
 
-CustomerState has exactly WAITING, SEATED, EATING, READY_TO_PAY, PAID and LEFT. Taking an order leaves a customer SEATED. markServed(turn) starts EATING only after the order is SERVED. Customer never prints, updates restaurant revenue or removes itself from a table.
+CustomerState has exactly WAITING, SEATED, EATING, READY_TO_PAY, PAID and LEFT. Taking an order leaves a customer SEATED. markServed(turn) starts EATING only after the order is SERVED. Customer never prints, updates restaurant revenue or removes itself from a table. getBillCents() reads the order's locked price (0 before ordering or after cancellation) instead of storing a copy; hasUnpaidBill() is true from ordering until the order is PAID.
 
 Check waiting penalty 8 through a Customer reference, satisfaction clamping, invalid transitions, one order per customer, and serving/eating/payment timing.
 
@@ -63,7 +63,7 @@ Only Order owns preparation arithmetic and order-status guards. Order knows its 
 
 Own Restaurant, Table, WaitingQueue and GameResult. Implement ownership, queue order, read-only access, eligibility lookup, paid-only accounting and abandonment cleanup. Delegate customer/order state changes to their public methods.
 
-recordPayment(customer, turn) owns the payment transaction: validate eligibility and no duplicate payment, mark Order PAID then Customer PAID, record locked cents and a satisfaction snapshot, increment servedCount and clear the table. Cashier must not duplicate this arithmetic.
+recordPayment(customer, turn) owns the payment transaction: validate eligibility and no duplicate payment, mark Order PAID then Customer PAID, record locked cents and a satisfaction snapshot, increment servedCount and clear the table. Cashier must not duplicate this arithmetic. Bill tracking also lives here: getPaidCustomers() is the bill history in payment order, getOutstandingBillCents() totals seated customers' unpaid bills, and lostBillCents accumulates the price of each order cancelled by a walkout. ConsoleUI only displays these values.
 
 Implement the average using snapshots from payment time. Victory is a conjunction: servedCount >= 4, revenueCents >= 4500 and average >= 60. No average means defeat. Check table capacity, queue removal, duplicate payment, abandonment, zero payments and each exact threshold.
 
