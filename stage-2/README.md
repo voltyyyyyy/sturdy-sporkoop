@@ -41,6 +41,8 @@ Store money as integer cents. Round VIP prices to the nearest cent; use HALF_UP 
 
 Search for `TODO(STAGE2,` to find the owner-marked work. Implement the throwing method bodies first, then connect the TODO call sites in `GameMgr`, `Waiter` and `ConsoleUI`. Existing baseline method bodies are retained until those replacements are ready.
 
+Each blank has an `IMPLEMENT HERE` guide. Replace its `UnsupportedOperationException` with your code. In existing working methods, replace only the marked area or line. Start with customer methods and the factory, then order pricing, controller/UI integration and tests.
+
 | Owner | Starting files |
 | --- | --- |
 | Gangula Karthik | `domain/Customer.java`, `RegularCustomer.java`, `CriticCustomer.java`, `Order.java`, `Waiter.java` |
@@ -131,6 +133,12 @@ Final Stage 1 → Stage 2 commit/compare link: **TODO(Qiyun)**.
 - [ ] TODO(Gangula/Qiyun): check the final diagram against code and coordinate publication. UML files remain excluded from this push.
 - [ ] TODO(Qiyun): tag `stage-2` only after the new behaviours are implemented and playable; fill the final compare link.
 - [ ] TODO(Qiyun): write the report's design overview delta, P1 dispatch through three subclasses and shared-flow LSP evidence, with code/test references.
+
+Report placeholders for Qiyun to fill:
+
+- Design change and reason: **[fill in]**; relevant classes/methods: **[fill in]**.
+- P1 example: **[Customer-typed call]**; behaviour in each subclass: **[fill in]**.
+- LSP evidence: **[shared service-flow test and result]**; tested commit: **[fill in]**.
 
 ## Current gameplay rules (Stage 1 baseline)
 
