@@ -1,12 +1,18 @@
-# Restaurant Rush - Stage 1
+# Restaurant Rush - Stage 2
 
 SC2002 / SC2302 Object-Oriented Design and Programming
 
 Team: Yang Mingchen, Gangula Karthik, Ochi Yuma, Zhang Qiyun, Chamadol Thongthornpatch (Pluem)
 
-This is a playable, offline Stage 1 restaurant game with an 18-turn command-line interface. The implementation contains the 17 types in the Stage 1 design and uses no external dependencies.
+This folder is the starting point for Stage 2 development, copied from the playable Stage 1 restaurant game. It currently runs the same offline, 18-turn command-line game, contains the 17 types in the Stage 1 design and uses no external dependencies.
 
-## Task allocation
+Stage 2 features have not been implemented yet. The VIP/Critic customers, Host, combo meals and Happy Hour are not available in this copy.
+
+The repository root contains Stage 1. Make Stage 2 changes inside `stage-2/`; all paths below are relative to this folder unless stated otherwise.
+
+## Inherited task allocation
+
+The following responsibilities describe the Stage 1 baseline and can be extended as Stage 2 work is defined.
 
 | Member and area | Files | Responsibilities |
 | --- | --- | --- |
@@ -23,22 +29,22 @@ This is a playable, offline Stage 1 restaurant game with an 18-turn command-line
 - `src/main/java/restaurant/domain/` contains the customer, menu, order, restaurant and staff classes.
 - [Stage 1 contracts and test notes](docs/stage-1-contracts.md) records domain responsibilities and verification cases.
 
-The game implements Stage 1 only. It does not include the VIP/Critic customers, Host, combo meals or Happy Hour from later stages.
-
 ## Build and run
 
 Requires JDK 17 or newer.
 
-In Windows PowerShell:
+From the repository root, enter the Stage 2 folder in Windows PowerShell:
 
 ```powershell
+cd stage-2
 .\build.ps1
 .\run.ps1
 ```
 
-Or compile and run from the repository root:
+Or, starting from the repository root in Bash:
 
 ```sh
+cd stage-2
 mkdir -p out
 find src/main/java -name '*.java' > out/sources.txt
 javac -encoding UTF-8 --release 17 -Xlint:all -Werror -d out @out/sources.txt
@@ -47,7 +53,7 @@ java -cp out restaurant.control.GameMgr
 
 ## Tests
 
-The test runners require JDK 17+ and Bash. Run them from the repository root:
+The test runners require JDK 17+ and Bash. Run them from `stage-2/` (enter it with `cd stage-2` from the repository root):
 
 ```sh
 bash tests/domain/run.sh
@@ -58,7 +64,7 @@ bash tests/game/run.sh
 
 The domain suite checks customer and order guards. The restaurant and staff suites use isolated test doubles to test their modules. The game suite launches the real application and checks an 18-turn win, an 18-turn loss, scheduled arrivals, service/payment timing and retryable invalid choices.
 
-## Stage 1 rules
+## Current gameplay rules (Stage 1 baseline)
 
 - Two tables, one Waiter, one Chef and one Cashier.
 - Arrivals on turns 1, 4, 7, 10, 13 and 16; each customer starts at satisfaction 100.
