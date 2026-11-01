@@ -16,6 +16,10 @@ public final class Order {
         this.status = OrderStatus.PLACED;
     }
 
+    public Order(MenuItem item, long priceCents) {
+        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - Order locked-price constructor");
+    }
+
     public MenuItem getItem() { return item; }
     public long getPriceCents() { return priceCents; }
     public int getPreparationUnitsDone() { return preparationUnitsDone; }

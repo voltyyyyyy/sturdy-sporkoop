@@ -176,6 +176,10 @@ public final class ConsoleUI {
                 + formatMoney(order.getPriceCents()) + ")";
     }
 
+    public void showOrderPlaced(Customer customer) {
+        throw new UnsupportedOperationException("STAGE2 TODO: Ochi Yuma - ConsoleUI.showOrderPlaced");
+    }
+
     private static String formatAverage(OptionalDouble average) {
         return average.isPresent()
                 ? String.format(Locale.ROOT, "%.1f", average.getAsDouble())

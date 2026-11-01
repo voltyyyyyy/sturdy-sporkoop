@@ -22,6 +22,7 @@ public final class GameMgr {
     private final Waiter waiter;
     private final Chef chef;
     private final Cashier cashier;
+    private final CustomerFactory customerFactory;
     private int currentTurn;
     private int nextCustomerId;
 
@@ -31,6 +32,7 @@ public final class GameMgr {
         this.waiter = new Waiter("Waiter");
         this.chef = new Chef("Chef");
         this.cashier = new Cashier("Cashier");
+        this.customerFactory = new CustomerFactory();
         this.currentTurn = 0;
         this.nextCustomerId = 1;
     }

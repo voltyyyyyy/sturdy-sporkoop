@@ -50,6 +50,10 @@ public abstract class Customer {
 
     public abstract int waitingPenalty();
 
+    public abstract long discountedPrice(long priceCents);
+
+    public abstract String typeLabel();
+
     public MenuItem chooseFood(Menu menu) {
         if (menu==null) {
             throw new IllegalArgumentException("Menu missing");
