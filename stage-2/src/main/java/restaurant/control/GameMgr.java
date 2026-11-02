@@ -5,7 +5,6 @@ import restaurant.domain.Chef;
 import restaurant.domain.Customer;
 import restaurant.domain.GameResult;
 import restaurant.domain.Order;
-import restaurant.domain.RegularCustomer;
 import restaurant.domain.Restaurant;
 import restaurant.domain.Table;
 import restaurant.domain.Waiter;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 public final class GameMgr {
     private static final int TOTAL_TURNS = 18;
-    private static final int[] ARRIVAL_TURNS = {1, 4, 7, 10, 13, 16};
 
     private final ConsoleUI ui;
     private final Restaurant restaurant;
@@ -71,14 +69,15 @@ public final class GameMgr {
     }
 
     private Optional<Customer> processArrivals(int turn) {
-        for (int arrivalTurn : ARRIVAL_TURNS) {
-            if (arrivalTurn == turn) {
-                Customer customer = new RegularCustomer(nextCustomerId++, turn);
-                restaurant.getWaitingQueue().add(customer);
-                return Optional.of(customer);
-            }
-        }
-        return Optional.empty();
+        Optional<Customer> arrival = Optional.ofNullable(
+                customerFactory.create(nextCustomerId, turn));
+
+        arrival.ifPresent(customer -> {
+            restaurant.getWaitingQueue().add(customer);
+            nextCustomerId++;
+        });
+
+        return arrival;
     }
 
     private void handleWaiterChoice(int turn) {

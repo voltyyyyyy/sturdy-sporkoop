@@ -1,5 +1,8 @@
 package restaurant.domain;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public final class VIPCustomer extends Customer {
     public VIPCustomer(int customerId, int arrivalTurn) {
         super(customerId, arrivalTurn);
@@ -7,16 +10,22 @@ public final class VIPCustomer extends Customer {
 
     @Override
     public int waitingPenalty() {
-        throw new UnsupportedOperationException("STAGE2 TODO: Yang Mingchen - VIPCustomer.waitingPenalty");
+        return 5;
     }
 
     @Override
     public long discountedPrice(long priceCents) {
-        throw new UnsupportedOperationException("STAGE2 TODO: Yang Mingchen - VIPCustomer.discountedPrice");
+        if (priceCents < 0) {
+            throw new IllegalArgumentException("Price must not be negative");
+        }
+        return BigDecimal.valueOf(priceCents)
+                .multiply(new BigDecimal("0.90"))
+                .setScale(0, RoundingMode.HALF_UP)
+                .longValueExact();
     }
 
     @Override
     public String typeLabel() {
-        throw new UnsupportedOperationException("STAGE2 TODO: Yang Mingchen - VIPCustomer.typeLabel");
+        return "VIP";
     }
 }
