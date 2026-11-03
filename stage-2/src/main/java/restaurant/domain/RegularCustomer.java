@@ -12,11 +12,14 @@ public final class RegularCustomer extends Customer {
 
     @Override
     public String typeLabel() {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - RegularCustomer.typeLabel");
+        return "Regular";
     }
 
     @Override
     public long discountedPrice(long priceCents) {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - RegularCustomer.discountedPrice");
+        if (priceCents < 0) {
+            throw new IllegalArgumentException("Price must not be negative");
+        }
+        return priceCents;
     }
 }

@@ -1,7 +1,6 @@
 package restaurant.domain;
 
 
-
 public abstract class Customer {
     private final int customerId;
     private final int arrivalTurn;

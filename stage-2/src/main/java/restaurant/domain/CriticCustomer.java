@@ -7,21 +7,33 @@ public final class CriticCustomer extends Customer {
 
     @Override
     public int waitingPenalty() {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - CriticCustomer.waitingPenalty");
+        return 12;
     }
 
     @Override
     public MenuItem chooseFood(Menu menu) {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - CriticCustomer.chooseFood");
+        if (menu == null) {
+            throw new IllegalArgumentException("Menu missing");
+        }
+        MenuItem best = menu.getItems().get(0);
+        for (MenuItem item : menu.getItems()) {
+            if (item.getPriceCents() > best.getPriceCents()) {
+                best = item;
+            }
+        }
+        return best;
     }
 
     @Override
     public String typeLabel() {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - CriticCustomer.typeLabel");
+        return "Critic";
     }
 
     @Override
     public long discountedPrice(long priceCents) {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - CriticCustomer.discountedPrice");
+        if (priceCents < 0) {
+            throw new IllegalArgumentException("Price must not be negative");
+        }
+        return priceCents;
     }
 }
