@@ -17,7 +17,16 @@ public final class Order {
     }
 
     public Order(MenuItem item, long priceCents) {
-        throw new UnsupportedOperationException("STAGE2 TODO: Gangula Karthik - Order locked-price constructor");
+        if (item == null) {
+            throw new IllegalArgumentException("Order item must not be null");
+        }
+        if (priceCents < 0) {
+            throw new IllegalArgumentException("Order price must not be negative");
+        }
+        this.item = item;
+        this.priceCents = priceCents;
+        this.preparationUnitsDone = 0;
+        this.status = OrderStatus.PLACED;
     }
 
     public MenuItem getItem() { return item; }

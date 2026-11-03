@@ -8,6 +8,7 @@ public final class Order {
     boolean rejectPreparation;
 
     public Order(MenuItem item) { this.item = item; }
+    public Order(MenuItem item, long priceCents) { this.item = item; }
     public OrderStatus getStatus() { return status; }
     public long getPriceCents() { return item.getPriceCents(); }
     public void advanceOneUnit() {

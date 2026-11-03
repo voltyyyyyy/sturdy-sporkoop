@@ -42,7 +42,7 @@ public final class Waiter extends Staff {
         if (item == null) {
             throw new IllegalArgumentException("Customer must choose a menu item");
         }
-        Order order = new Order(item);
+        Order order = new Order(item, customer.discountedPrice(item.getPriceCents()));
         customer.placeOrder(order);
         markActed();
         return order;
