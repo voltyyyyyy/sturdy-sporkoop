@@ -101,10 +101,8 @@ public final class GameMgr {
                     int customerId = ui.askCustomerId();
                     Customer customer = restaurant.findSeatedCustomer(customerId);
                     if (task == 2) {
-                        Order order = waiter.takeOrder(restaurant, customer);
-                        ui.showMessage("Customer #" + customerId + " ordered "
-                                + order.getItem().getName() + " (" + order.getItem().getPreparationUnits()
-                                + " preparation unit(s)).");
+                        waiter.takeOrder(restaurant, customer);
+                        ui.showOrderPlaced(customer);
                     } else {
                         waiter.serve(restaurant, customer, turn);
                         ui.showMessage("Waiter served customer #" + customerId + ".");
