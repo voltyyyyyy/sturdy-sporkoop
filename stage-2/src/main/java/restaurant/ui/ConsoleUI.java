@@ -98,7 +98,14 @@ public final class ConsoleUI {
 
     public void showPayment(Customer customer) {
         System.out.println("Cashier collected payment from customer #" + customer.getCustomerId()
+                + " [" + customer.typeLabel() + "]"
                 + " (" + formatMoney(customer.getBillCents()) + ").");
+        long listPrice = customer.getOrder().getItem().getPriceCents();
+        long paid = customer.getBillCents();
+        if (paid < listPrice) {
+            System.out.println("  Discount applied: saved " + formatMoney(listPrice - paid)
+                    + " off the listed " + formatMoney(listPrice) + ".");
+        }
     }
 
     public void showBillHistory(Restaurant restaurant) {
@@ -161,6 +168,7 @@ public final class ConsoleUI {
 
     private void showCustomer(Customer customer, String indent) {
         System.out.println(indent + "Customer #" + customer.getCustomerId()
+                + " [" + customer.typeLabel() + "]"
                 + " | " + customer.getState()
                 + " | satisfaction " + customer.getSatisfaction()
                 + " | " + orderDescription(customer.getOrder()));
@@ -177,7 +185,13 @@ public final class ConsoleUI {
     }
 
     public void showOrderPlaced(Customer customer) {
-        throw new UnsupportedOperationException("STAGE2 TODO: Ochi Yuma - ConsoleUI.showOrderPlaced");
+        Order order = customer.getOrder();
+        int units = order.getItem().getPreparationUnits();
+        String unitWord = units == 1 ? "unit" : "units";
+        System.out.println(customer.typeLabel() + " customer #" + customer.getCustomerId()
+                + " ordered " + order.getItem().getName()
+                + " (" + units + " preparation " + unitWord + ", "
+                + formatMoney(order.getPriceCents()) + ").");
     }
 
     private static String formatAverage(OptionalDouble average) {
