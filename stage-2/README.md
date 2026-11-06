@@ -128,7 +128,7 @@ This table describes the scaffold; finish it against the implemented stage befor
 
 Final Stage 1 → Stage 2 commit/compare link: **TODO(Qiyun)**.
 
-- [ ] TODO(Qiyun): inspect the existing local `stage-1` tag and verify the intended runnable baseline and remote tag.
+- [x] TODO(Qiyun): inspect the existing local `stage-1` tag and verify the intended runnable baseline and remote tag.
 - [ ] TODO(Qiyun): resolve integration conflicts and link passing tests and both reproducible runs.
 - [ ] TODO(Gangula/Qiyun): check the final diagram against code and coordinate publication. UML files remain excluded from this push.
 - [ ] TODO(Qiyun): tag `stage-2` only after the new behaviours are implemented and playable; fill the final compare link.
@@ -136,7 +136,7 @@ Final Stage 1 → Stage 2 commit/compare link: **TODO(Qiyun)**.
 
 Report placeholders for Qiyun to fill:
 
-- Design change and reason: **[fill in]**; relevant classes/methods: **[fill in]**.
+- Design change and reason: Customer behaviour that varies by type (waiting penalty, price, label, food choice) moved into abstract hooks on `Customer`, implemented by `RegularCustomer`, `VIPCustomer` and `CriticCustomer`. Creation moved into `CustomerFactory`, so adding a type touches the factory and one new subclass, not the controller or `Restaurant`; relevant classes/methods: `Customer.waitingPenalty()/discountedPrice(long)/typeLabel()/chooseFood(Menu)`, `CustomerFactory.create(int, int)`, `GameMgr.processArrivals()`, `Waiter` order creation.
 - P1 example: **[Customer-typed call]**; behaviour in each subclass: **[fill in]**.
 - LSP evidence: **[shared service-flow test and result]**; tested commit: **[fill in]**.
 
