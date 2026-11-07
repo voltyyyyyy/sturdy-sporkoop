@@ -80,6 +80,7 @@ public final class StaffActionsTest {
         expect(IllegalStateException.class, () -> waiter.serve(restaurant, customer, 5));
         check(!waiter.hasActedThisTurn() && order.getStatus() == OrderStatus.PLACED);
         order.advanceOneUnit();
+        order.advanceOneUnit();
         expect(IllegalArgumentException.class, () -> waiter.serve(restaurant, customer, 3));
         check(order.getStatus() == OrderStatus.READY && order.serveCalls == 0);
         check(customer.getState() == CustomerState.SEATED && !waiter.hasActedThisTurn());

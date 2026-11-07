@@ -78,8 +78,13 @@ public final class Stage2BehaviorTest {
         expect(IllegalArgumentException.class, () -> critic.discountedPrice(-5));
 
         Menu menu = new Menu();
-        check(critic.chooseFood(menu) == menu.findByName("Pasta"));
-        check(new RegularCustomer(1, 1).chooseFood(menu) == menu.getItems().get(0));
+        MenuItem criticChoice = critic.chooseFood(menu);
+        check(criticChoice.getName().equals("Pasta + Burger"));
+        check(criticChoice.getPriceCents() == 2970L);
+        check(criticChoice.getPreparationUnits() == 3);
+        MenuItem regularChoice = new RegularCustomer(1, 1).chooseFood(menu);
+        check(regularChoice.getName().equals("Salad + Burger"));
+        check(regularChoice.getPriceCents() == 2160L);
     }
 
     private static void factorySchedule() {
@@ -102,11 +107,11 @@ public final class Stage2BehaviorTest {
     }
 
     private static void sharedServiceFlow() {
-        runSharedScenario(new RegularCustomer(1, 1), 900L, 8);
+        runSharedScenario(new RegularCustomer(1, 1), 2160L, 8);
         runSharedScenario(new VIPCustomer(2, 1), 810L, 5);
-        runSharedScenario(new CriticCustomer(3, 1), 1800L, 12);
+        runSharedScenario(new CriticCustomer(3, 1), 2970L, 12);
 
-        runAbandonmentScenario(new RegularCustomer(4, 1), 900L);
+        runAbandonmentScenario(new RegularCustomer(4, 1), 2160L);
         runAbandonmentScenario(new VIPCustomer(5, 1), 810L);
     }
 
@@ -167,10 +172,10 @@ public final class Stage2BehaviorTest {
         check(victoryOutput.contains("=== VICTORY ==="));
         check(victoryOutput.contains("Paid customers: 5"));
         check(victoryOutput.contains("Unhappy departures: 0"));
-        check(victoryOutput.contains("Revenue: $53.10"));
-        check(victoryOutput.contains("Average paid-customer satisfaction: 79.6"));
+        check(victoryOutput.contains("Revenue: $102.60"));
+        check(victoryOutput.contains("Average paid-customer satisfaction: 80.6"));
         check(victoryOutput.contains("Turns used: 18"));
-        check(victoryOutput.contains("Unpaid bills: $9.00 | Lost to walkouts: $0.00"));
+        check(victoryOutput.contains("Unpaid bills: $0.00 | Lost to walkouts: $0.00"));
 
         String defeatOutput = runScriptedGame(DEFEAT_INPUT);
         check(defeatOutput.contains("=== DEFEAT ==="));
@@ -195,27 +200,27 @@ public final class Stage2BehaviorTest {
     }
 
     private static final String VICTORY_INPUT = String.join("\n",
-            "1", "1", "0",
-            "2", "1", "1", "1",
-            "3", "1", "0",
-            "1", "2", "0",
-            "2", "2", "1", "2",
-            "3", "2", "0",
-            "1", "1", "0",
-            "2", "3", "1", "3",
-            "3", "3", "0",
-            "1", "2", "0",
-            "2", "4", "1", "4",
-            "0", "1", "4",
-            "3", "4", "0",
-            "1", "1", "0",
-            "2", "5", "1", "5",
-            "3", "5", "0",
-            "1", "2", "0",
-            "2", "6", "1", "6",
+            "0", "2", "1", "1", "1",
+            "0", "0", "1", "1",
+            "0", "3", "1", "0",
+            "0", "2", "2", "1", "2",
+            "0", "3", "2", "0",
+            "0", "0", "0",
+            "0", "2", "3", "1", "3",
+            "0", "0", "1", "3",
+            "0", "3", "3", "0",
+            "0", "2", "4", "1", "4",
+            "0", "0", "1", "4",
+            "0", "0", "1", "4",
+            "0", "3", "4", "0",
+            "0", "2", "5", "1", "5",
+            "0", "0", "1", "5",
+            "0", "3", "5", "0",
+            "0", "0", "0",
+            "0", "0", "0",
             "");
 
-    private static final String DEFEAT_INPUT = ("0\n0\n").repeat(18);
+    private static final String DEFEAT_INPUT = ("0\n0\n0\n").repeat(18);
 
     private static void check(boolean condition) {
         checks++;

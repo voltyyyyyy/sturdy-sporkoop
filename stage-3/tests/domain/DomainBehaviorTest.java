@@ -18,7 +18,10 @@ public final class DomainBehaviorTest {
         check(menu.findByName("Burger").getPriceCents() == 1500L);
         check(menu.findByName("Pasta").getPreparationUnits() == 2);
         expect(IllegalArgumentException.class, () -> menu.findByName("Soup"));
-        check(new RegularCustomer(1, 1).chooseFood(menu) == menu.getItems().get(0));
+        MenuItem regularChoice = new RegularCustomer(1, 1).chooseFood(menu);
+        check(regularChoice.getName().equals("Salad + Burger"));
+        check(regularChoice.getPriceCents() == 2160L);
+        check(regularChoice.getPreparationUnits() == 2);
     }
 
     private static void customerTransitionsAndSatisfaction() {
@@ -38,8 +41,9 @@ public final class DomainBehaviorTest {
         check(customer.getBillCents() == 0 && !customer.hasUnpaidBill());
         Order order = new Order(customer.chooseFood(new Menu()));
         customer.placeOrder(order);
-        check(customer.getBillCents() == 900L && customer.hasUnpaidBill());
+        check(customer.getBillCents() == 2160L && customer.hasUnpaidBill());
         expect(IllegalStateException.class, () -> customer.markServed(1));
+        order.advanceOneUnit();
         order.advanceOneUnit();
         order.markServed();
         customer.markServed(1);
@@ -55,7 +59,7 @@ public final class DomainBehaviorTest {
         customer.markPaid();
         customer.loseSatisfaction(8);
         check(customer.getState() == CustomerState.PAID && customer.getSatisfaction() == 100);
-        check(customer.getBillCents() == 900L && !customer.hasUnpaidBill());
+        check(customer.getBillCents() == 2160L && !customer.hasUnpaidBill());
 
         Customer walkout = new RegularCustomer(3, 1);
         walkout.markSeated();
