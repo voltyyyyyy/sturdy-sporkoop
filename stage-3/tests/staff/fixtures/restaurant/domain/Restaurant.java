@@ -16,6 +16,8 @@ public final class Restaurant {
     public List<Table> getTables() { return tables; }
     public WaitingQueue getWaitingQueue() { return queue; }
     public Menu getMenu() { return menu; }
+    private final HappyHour happyHour = new HappyHour();
+    public HappyHour getHappyHour() { return happyHour; }
     public Optional<Customer> nextReadyToPay(int turn) { return Optional.ofNullable(eligible); }
     public void recordPayment(Customer customer, int turn) {
         if (rejectPayment) { throw new IllegalStateException("Payment rejected"); }

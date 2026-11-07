@@ -18,6 +18,7 @@ public final class Restaurant {
     private final List<Table> tables;
     private final WaitingQueue waitingQueue;
     private final Menu menu;
+    private final HappyHour happyHour = new HappyHour();
     private long revenueCents;
     private int servedCount;
     private int abandonedCount;
@@ -34,6 +35,7 @@ public final class Restaurant {
     public List<Table> getTables() { return tables; }
     public WaitingQueue getWaitingQueue() { return waitingQueue; }
     public Menu getMenu() { return menu; }
+    public HappyHour getHappyHour() { return happyHour; }
     public long getRevenueCents() { return revenueCents; }
     public int getServedCount() { return servedCount; }
     public int getAbandonedCount() { return abandonedCount; }
@@ -79,6 +81,25 @@ public final class Restaurant {
             }
         }
         throw new IllegalArgumentException("No table with table id " + tableId);
+    }
+
+    public boolean activateHappyHour() {
+        return happyHour.activate();
+    }
+
+    public void recoverWaitingSatisfaction() {
+        if (!happyHour.isActive()) {
+            return;
+        }
+        for (Customer c : getPresentCustomers()) {
+            if (isStillWaitingForService(c)) {
+                happyHour.recover(c);
+            }
+        }
+    }
+
+    public void tickHappyHour() {
+        happyHour.tick();
     }
 
     public void advanceEating(int turn) {

@@ -135,6 +135,16 @@ public abstract class Customer {
         satisfaction = Math.max(0, satisfaction - points);
     }
 
+    public void recoverSatisfaction(int points) {
+        if (points < 0) {
+            throw new IllegalArgumentException("Satisfaction recovery must not be negative");
+        }
+        if (state != CustomerState.WAITING && state != CustomerState.SEATED) {
+            return;
+        }
+        satisfaction = Math.min(100, satisfaction + points);
+    }
+
     public void leave() {
         if (state != CustomerState.WAITING && state != CustomerState.SEATED) {
             throw new IllegalStateException("Only waiting or seated customers can leave");
