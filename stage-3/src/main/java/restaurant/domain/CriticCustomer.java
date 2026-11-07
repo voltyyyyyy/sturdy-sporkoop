@@ -21,7 +21,16 @@ public final class CriticCustomer extends Customer {
                 best = item;
             }
         }
-        return best;
+        MenuItem priciest = best;
+        MenuItem secondPriciest = null;
+        for (MenuItem item : menu.getItems()) {
+            if (item != priciest
+                    && (secondPriciest == null || item.getPriceCents() > secondPriciest.getPriceCents())) {
+                secondPriciest = item;
+            }
+        }
+        MenuItem combo = new ComboMeal(priciest, secondPriciest);
+        return combo.getPriceCents() > best.getPriceCents() ? combo : best;
     }
 
     @Override

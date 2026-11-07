@@ -1,6 +1,6 @@
 package restaurant.domain;
 
-public final class MenuItem {
+public class MenuItem {
     private final String name;
     private final long priceCents;
     private final int preparationUnits;
