@@ -3,6 +3,7 @@ package restaurant.control;
 import restaurant.domain.Cashier;
 import restaurant.domain.Chef;
 import restaurant.domain.Customer;
+import restaurant.domain.Host;
 import restaurant.domain.GameResult;
 import restaurant.domain.Order;
 import restaurant.domain.Restaurant;
@@ -18,6 +19,7 @@ public final class GameMgr {
     private final ConsoleUI ui;
     private final Restaurant restaurant;
     private final Waiter waiter;
+    private final Host host;
     private final Chef chef;
     private final Cashier cashier;
     private final CustomerFactory customerFactory;
@@ -28,6 +30,7 @@ public final class GameMgr {
         this.ui = ui;
         this.restaurant = new Restaurant();
         this.waiter = new Waiter("Waiter");
+        this.host = new Host("Host");
         this.chef = new Chef("Chef");
         this.cashier = new Cashier("Cashier");
         this.customerFactory = new CustomerFactory();
@@ -50,12 +53,17 @@ public final class GameMgr {
 
     private void runTurn(int turn) {
         waiter.resetForTurn();
+        host.resetForTurn();
         chef.resetForTurn();
         cashier.resetForTurn();
 
         Optional<Customer> arrival = processArrivals(turn);
-        ui.showTurnStart(turn, restaurant, waiter, chef, cashier);
+        ui.showTurnStart(turn, restaurant, waiter, host, chef, cashier);
         arrival.ifPresent(customer -> ui.showMessage("Customer #" + customer.getCustomerId() + " arrived."));
+
+        handleManagerChoice();
+        restaurant.recoverWaitingSatisfaction();
+        seatWithHost();
 
         handleWaiterChoice(turn);
         handleChefChoice();
@@ -65,7 +73,33 @@ public final class GameMgr {
             ui.showMessage("Customer #" + customer.getCustomerId()
                     + " left after losing all satisfaction.");
         }
+        restaurant.tickHappyHour();
         ui.showTurnEnd(turn, restaurant);
+    }
+
+    private void handleManagerChoice() {
+        if (!ui.askHappyHour()) {
+            return;
+        }
+        if (restaurant.activateHappyHour()) {
+            ui.showHappyHour(restaurant.getHappyHour().getRemainingTurns());
+        } else {
+            ui.showError("Happy Hour has already been used this game.");
+        }
+    }
+
+    private void seatWithHost() {
+        Optional<Customer> candidate = restaurant.getWaitingQueue().peek();
+        if (candidate.isEmpty() || !host.seatNext(restaurant)) {
+            return;
+        }
+        int tableId = restaurant.getTables().stream()
+                .filter(table -> table.getOccupant() == candidate.get())
+                .mapToInt(Table::getTableId)
+                .findFirst()
+                .orElseThrow();
+        ui.showMessage("Host seated customer #" + candidate.get().getCustomerId()
+                + " at table " + tableId + ".");
     }
 
     private Optional<Customer> processArrivals(int turn) {

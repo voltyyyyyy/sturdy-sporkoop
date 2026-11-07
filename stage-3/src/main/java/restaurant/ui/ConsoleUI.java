@@ -9,6 +9,7 @@ import java.util.OptionalDouble;
 import restaurant.domain.Cashier;
 import restaurant.domain.Chef;
 import restaurant.domain.Customer;
+import restaurant.domain.Host;
 import restaurant.domain.GameResult;
 import restaurant.domain.Order;
 import restaurant.domain.Restaurant;
@@ -23,7 +24,7 @@ public final class ConsoleUI {
     }
 
     public void showTurnStart(int turn, Restaurant restaurant,
-                              Waiter waiter, Chef chef, Cashier cashier) {
+                              Waiter waiter, Host host, Chef chef, Cashier cashier) {
         System.out.println();
         System.out.println("=== Turn " + turn + " / 18 ===");
         System.out.println("Revenue: " + formatMoney(restaurant.getRevenueCents())
@@ -51,8 +52,8 @@ public final class ConsoleUI {
             }
         }
 
-        System.out.println("Staff tasks: " + taskStatus(waiter) + "; " + taskStatus(chef)
-                + "; " + taskStatus(cashier));
+        System.out.println("Staff tasks: " + taskStatus(waiter) + "; " + taskStatus(host)
+                + "; " + taskStatus(chef) + "; " + taskStatus(cashier));
     }
 
     public int askWaiterTask() {
