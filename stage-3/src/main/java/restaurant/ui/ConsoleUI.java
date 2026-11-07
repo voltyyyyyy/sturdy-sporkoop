@@ -28,6 +28,10 @@ public final class ConsoleUI {
         System.out.println("=== Turn " + turn + " / 18 ===");
         System.out.println("Revenue: " + formatMoney(restaurant.getRevenueCents())
                 + " | Average paid satisfaction: " + formatAverage(restaurant.getAverageSatisfaction()));
+        if (restaurant.getHappyHour().isActive()) {
+            System.out.println("Happy Hour active: " + restaurant.getHappyHour().getRemainingTurns()
+                    + " turn(s) remaining.");
+        }
 
         List<Customer> waiting = restaurant.getWaitingQueue().getCustomers();
         System.out.println("Waiting queue:");
@@ -59,6 +63,24 @@ public final class ConsoleUI {
             }
             showError("Choose 0, 1, 2 or 3.");
         }
+    }
+
+    public boolean askHappyHour() {
+        while (true) {
+            int choice = readInt("Happy Hour: 1=activate, 0=skip: ");
+            if (choice == 1) {
+                return true;
+            }
+            if (choice == 0) {
+                return false;
+            }
+            showError("Choose 0 or 1.");
+        }
+    }
+
+    public void showHappyHour(int remainingTurns) {
+        System.out.println("Happy Hour activated! It lasts this turn and the next ("
+                + remainingTurns + " turn(s) remaining).");
     }
 
     public int askChefTask() {
