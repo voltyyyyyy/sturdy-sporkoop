@@ -43,6 +43,7 @@ public final class Stage3BehaviorTest {
         MenuItem odd = new MenuItem("Odd", 999L, 1);
         check(new ComboMeal(odd, new MenuItem("Odd2", 999L, 1)).getPriceCents() == 1798L);
         expect(IllegalArgumentException.class, () -> new ComboMeal(odd, odd));
+        expect(IllegalArgumentException.class, () -> new ComboMeal(odd, new MenuItem("Odd", 999L, 1)));
         expect(IllegalArgumentException.class, () -> new ComboMeal(salad, null));
     }
 
@@ -125,6 +126,8 @@ public final class Stage3BehaviorTest {
         happyHour.recover(waiting);
         happyHour.recover(waiting);
         check(waiting.getSatisfaction() == 100);
+        waiting.recoverSatisfaction(Integer.MAX_VALUE);
+        check(waiting.getSatisfaction() == 100);
         expect(IllegalArgumentException.class, () -> happyHour.recover(null));
         expect(IllegalArgumentException.class, () -> waiting.recoverSatisfaction(-1));
 
@@ -177,6 +180,16 @@ public final class Stage3BehaviorTest {
         check(!host.seatNext(restaurant));
         check(!host.hasActedThisTurn());
         expect(IllegalArgumentException.class, () -> host.seatNext(null));
+
+        Restaurant staleQueue = new Restaurant();
+        Host otherHost = new Host("Host");
+        RegularCustomer noLongerWaiting = new RegularCustomer(5, 1);
+        staleQueue.getWaitingQueue().add(noLongerWaiting);
+        noLongerWaiting.markSeated();
+        expect(IllegalStateException.class, () -> otherHost.seatNext(staleQueue));
+        check(staleQueue.getTables().get(0).isFree());
+        check(staleQueue.getWaitingQueue().peek().orElseThrow() == noLongerWaiting);
+        check(!otherHost.hasActedThisTurn());
     }
 
     private static void happyHourGame() {

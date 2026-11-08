@@ -21,6 +21,9 @@ public final class Host extends Staff {
         }
         Customer customer = next.get();
         Table table = freeTable.get();
+        if (customer.getState() != CustomerState.WAITING) {
+            throw new IllegalStateException("Only waiting customers can be seated");
+        }
         table.seat(customer);
         customer.markSeated();
         restaurant.getWaitingQueue().remove(customer);

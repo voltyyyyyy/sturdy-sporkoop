@@ -18,7 +18,7 @@ public final class ComboMeal extends MenuItem {
         if (first == null || second == null) {
             throw new IllegalArgumentException("Combo components must not be null");
         }
-        if (first == second) {
+        if (first.getName().equals(second.getName())) {
             throw new IllegalArgumentException("A combo needs two different dishes");
         }
         return first.getName() + " + " + second.getName();

@@ -142,7 +142,7 @@ public abstract class Customer {
         if (state != CustomerState.WAITING && state != CustomerState.SEATED) {
             return;
         }
-        satisfaction = Math.min(100, satisfaction + points);
+        satisfaction += Math.min(points, 100 - satisfaction);
     }
 
     public void leave() {
