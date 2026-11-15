@@ -104,3 +104,17 @@ The recorded video walks through the design first (0:00 to 11:40), then shows a 
 | 8:55 | Ochi Yuma | SOLID scorecard, sequence diagram, trade-offs |
 | 10:30 | Ochi Yuma | Testing and reproducibility, GitHub evidence, handoff |
 | 11:40 | Gangula Karthik | Live demo: build, a victory run, a defeat run |
+
+## Assignment-brief video segments
+
+The seven segments required by the brief, mapped to the video above. Demo times are approximate to within about half a minute.
+
+| # | Required segment | Where |
+| --- | --- | --- |
+| 1 | The game launching from the submitted project | 11:40 (build from the submitted stage-3 folder, then launch) |
+| 2 | Meaningful manager choices, including a constrained decision | 12:10 (turn 1: rejected Happy Hour input, Waiter seat blocked because the Host already seated the arrival) |
+| 3 | A dish going READY - SERVED - payment | 12:30 (turns 2-5: Salad READY, SERVED, first payment) |
+| 4 | VIP or Critic behaviour | 12:50 (VIP orders turn 4) and 13:40 (Critic combo order turn 10) |
+| 5 | A Stage 3 feature | Combo order 12:10, Happy Hour and Host seating through the demo, walkthrough 6:05 |
+| 6 | One victory and one defeat | Victory 14:30, defeat run 14:40-17:54 |
+| 7 | Stage tag comparisons and the diagrams | 3:00 (class diagram), 8:15 (stage compare links and change analysis), 8:55 (sequence diagram) |
